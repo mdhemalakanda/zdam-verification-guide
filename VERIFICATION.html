@@ -1179,10 +1179,23 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># Û
 <script>
 (function () {
 	var langs = {
-		en: { id: 'content-en', btn: 'btn-en' },
-		bn: { id: 'content-bn', btn: 'btn-bn' },
-		ur: { id: 'content-ur', btn: 'btn-ur' }
+		en: { id: 'content-en', btn: 'btn-en', param: 'en' },
+		bn: { id: 'content-bn', btn: 'btn-bn', param: 'bn' },
+		ur: { id: 'content-ur', btn: 'btn-ur', param: 'ur' }
 	};
+	function getParamLang() {
+		var params = new URLSearchParams(window.location.search);
+		var lang = params.get('lang');
+		if (lang && langs[lang]) { return lang; }
+		if (lang === 'urdu' || lang === 'pakistan') { return 'ur'; }
+		if (lang === 'bengali') { return 'bn'; }
+		return null;
+	}
+	function setParam(lang) {
+		var url = new URL(window.location.href);
+		url.searchParams.set('lang', lang);
+		window.history.replaceState(null, '', url.toString());
+	}
 	function show(lang) {
 		Object.keys(langs).forEach(function (key) {
 			var el = document.getElementById(langs[key].id);
@@ -1191,7 +1204,10 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># Û
 			if (active) { el.classList.remove('hidden'); btn.classList.add('active'); }
 			else { el.classList.add('hidden'); btn.classList.remove('active'); }
 		});
+		setParam(langs[lang].param);
 	}
+	var initial = getParamLang() || 'en';
+	show(initial);
 	Object.keys(langs).forEach(function (key) {
 		document.getElementById(langs[key].btn).addEventListener('click', function () { show(key); });
 	});
