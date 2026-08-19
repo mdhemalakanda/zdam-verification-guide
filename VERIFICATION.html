@@ -135,7 +135,13 @@
 
 	footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 12px; }
 
-	.rtl { direction: rtl; text-align: right; }
+	.rtl {
+		direction: rtl;
+		text-align: right;
+		font-family: "Noto Naskh Arabic", "Noto Nastaliq Urdu", "Segoe UI", Tahoma, Arial, sans-serif;
+		font-size: 16.5px;
+		line-height: 1.9;
+	}
 	.rtl th, .rtl td { text-align: right; }
 	.rtl ol.steps > li { padding: 0 56px 20px 0; }
 	.rtl ol.steps > li::before { left: auto; right: 0; }
@@ -874,9 +880,9 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 		<h1>TradeSafe Access Manager — کلائنٹ تصدیقی گائیڈ</h1>
 		<p>تینوں ضروریات کے لیے: <strong>آپ نے کیا مانگا تھا</strong>، <strong>اس اپ ڈیٹ نے کیسے حل کیا</strong>، اور <strong>سائٹ پر تصدیق کرنے کے قدم بہ قدم طریقے</strong> — تاکہ آپ اعتماد کے ساتھ حتمی منظوری دے سکیں۔</p>
 		<div class="badges">
-			<span class="badge">ضرورت ۱ · اکاؤنٹ مائیگریشن میں دعوتی کوڈ محفوظ</span>
+			<span class="badge">ضرورت ۱ · اکاؤنٹ منتقلی میں دعوتی کوڈ محفوظ</span>
 			<span class="badge">ضرورت ۲ · کوڈ امپورٹ / ایکسپورٹ</span>
-			<span class="badge">ضرورت ۳ · FSLM انکرپشن کلید (مائیگریشن کا دن)</span>
+			<span class="badge">ضرورت ۳ · FSLM خفیہ کلید (منتقلی کا دن)</span>
 		</div>
 	</header>
 
@@ -888,28 +894,28 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 
 	<!-- ============================ ضرورت ۱ ============================ -->
 	<section>
-		<h2><span class="num">۱</span> اکاؤنٹ مائیگریشن ہر صارف کا دعوتی کوڈ محفوظ رکھتا ہے <span class="blocker">مسئلہ</span></h2>
+		<h2><span class="num">۱</span> اکاؤنٹ منتقلی ہر صارف کا دعوتی کوڈ محفوظ رکھتا ہے <span class="blocker">مسئلہ</span></h2>
 		<p class="lede">
-			پہلے مائیگریشن صرف صارفین کو اجازت (رول) دیتا تھا، لیکن کبھی نہیں لکھتا تھا کہ صارف نے <em>کس دعوتی کوڈ سے رجسٹریشن کی</em>۔
-			مسئلہ یہ ہے کہ ہر پرانا پروڈکٹ کلید ٹوکن اسی کوڈ سے مقفل (انکرپٹ) ہوتا ہے۔ اس لیے مائیگریشن میں بھی یہ کوڈ محفوظ رہنا ضروری ہے۔
+			پہلے منتقلی صرف صارفین کو اجازت (رول) دیتا تھا، لیکن کبھی نہیں لکھتا تھا کہ صارف نے <em>کس دعوتی کوڈ سے رجسٹریشن کی</em>۔
+			مسئلہ یہ ہے کہ ہر پرانا پروڈکٹ کلید ٹوکن اسی کوڈ سے بند (خفیہ) ہوتا ہے۔ اس لیے منتقلی میں بھی یہ کوڈ محفوظ رہنا ضروری ہے۔
 			اس اپ ڈیٹ میں ہر صارف کا NUA دعوتی کوڈ ڈھونڈ کر پلگ ان کے ڈیٹا میں محفوظ کیا جاتا ہے۔
 		</p>
 
 		<div class="ask">
 			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
 			<blockquote>
-				<p>"Migrate Accounts دعوتی کوڈ کھو دیتا ہے۔ یہ صرف رول دیتا ہے؛ کبھی نہیں پڑھتا کہ صارف نے کس کوڈ سے رجسٹر کیا، اور جو آڈٹ ریکارڈ لکھتا ہے اس میں کوڈ کا خانہ خالی ہوتا ہے۔ مائیگریشن کے بعد ہر صارف کا اصلی کوڈ درکار ہے — تمام پرانے پروڈکٹ کلید ٹوکنز اسی سے انکرپٹ ہیں۔"</p>
-				<p>"مائیگریشن کے دوران صارف کا NUA کوڈ ڈھونڈیں (usermeta <code>nua_invcode_used</code> → <code>invitation_code</code> پوسٹ ٹائٹل) اور اسے <code>zdam_code_logs</code> ٹیبل میں لکھیں، بالکل اصلی ریڈمپشن کی طرح (کوڈ بھرا ہوا، <code>is_success=1</code>، <code>event_type</code> رجسٹریشن، <code>admin_action</code> نہیں)۔ یا ہر صارف کے لیے usermeta میں محفوظ کریں — بس بتائیں کہ آخر کہاں جائے گا۔"</p>
+				<p>"Migrate Accounts دعوتی کوڈ کھو دیتا ہے۔ یہ صرف رول دیتا ہے؛ کبھی نہیں پڑھتا کہ صارف نے کس کوڈ سے رجسٹر کیا، اور جو آڈٹ ریکارڈ لکھتا ہے اس میں کوڈ کا خانہ خالی ہوتا ہے۔ منتقلی کے بعد ہر صارف کا اصلی کوڈ درکار ہے — تمام پرانے پروڈکٹ کلید ٹوکنز اسی سے خفیہ ہیں۔"</p>
+				<p>"منتقلی کے دوران صارف کا NUA کوڈ ڈھونڈیں (usermeta <code>nua_invcode_used</code> → <code>invitation_code</code> پوسٹ ٹائٹل) اور اسے <code>zdam_code_logs</code> ٹیبل میں لکھیں، بالکل اصلی اندراج کی طرح (کوڈ بھرا ہوا، <code>is_success=1</code>، <code>event_type</code> رجسٹریشن، <code>admin_action</code> نہیں)۔ یا ہر صارف کے لیے usermeta میں محفوظ کریں — بس بتائیں کہ آخر کہاں جائے گا۔"</p>
 			</blockquote>
 		</div>
 
 		<div class="fixed">
 			<span class="title">اس اپ ڈیٹ میں کیسے حل کیا گیا</span>
 			<ul>
-				<li><strong>مائیگریشن کے دوران</strong> پلگ ان ہر صارف کا NUA دعوتی کوڈ ڈھونڈتا ہے — usermeta <code>nua_invcode_used</code> سے <code>invitation_code</code> پوسٹ کے ٹائٹل تک — اور اسے ریکارڈ کرتا ہے۔</li>
-				<li>جن کے کوڈ مل جاتے ہیں، ان کے لیے Usage Logs میں <strong>ریڈمپشن طرز کا ریکارڈ</strong> بنتا ہے: <code>event_type = registration</code>، <code>is_success = 1</code>، <strong>کوڈ کا خانہ = اصلی دعوتی کوڈ</strong>، دیے گئے رولز، نوٹ "Migrate Accounts"۔</li>
+				<li><strong>منتقلی کے دوران</strong> پلگ ان ہر صارف کا NUA دعوتی کوڈ ڈھونڈتا ہے — usermeta <code>nua_invcode_used</code> سے <code>invitation_code</code> پوسٹ کے ٹائٹل تک — اور اسے ریکارڈ کرتا ہے۔</li>
+				<li>جن کے کوڈ مل جاتے ہیں، ان کے لیے Usage Logs میں <strong>اندراج جیسا ریکارڈ</strong> بنتا ہے: <code>event_type = registration</code>، <code>is_success = 1</code>، <strong>کوڈ کا خانہ = اصلی دعوتی کوڈ</strong>، دیے گئے رولز، نوٹ "Migrate Accounts"۔</li>
 				<li>یہی کوڈ <strong>صارف کی پروفائل پر بھی</strong> <code>zdam_migrated_invite_code</code> usermeta کے نام سے محفوظ ہوتا ہے — چاہیں تو لاگز سے یا usermeta ٹیبل سے، دونوں میں سے کسی سے بھی ڈھونڈ سکتے ہیں۔</li>
-				<li>جن کے کوڈ <strong>نہیں ملتے</strong>، ان کے لیے عام admin-action آڈٹ ریکارڈ بنتا ہے (کوڈ کا خانہ خالی)۔ <em>Preview</em> بٹن کچھ دینے سے پہلے ہی بتا دیتا ہے کہ کتنے اکاؤنٹس کس زمرے میں آئیں گے۔</li>
+				<li>جن کے کوڈ <strong>نہیں ملتے</strong>، ان کے لیے عام انتظامی ریکارڈ بنتا ہے (کوڈ کا خانہ خالی)۔ <em>Preview</em> بٹن کچھ دینے سے پہلے ہی بتا دیتا ہے کہ کتنے اکاؤنٹس کس زمرے میں آئیں گے۔</li>
 			</ul>
 		</div>
 
@@ -917,7 +923,7 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 		<table>
 			<tr><th>مقام</th><th>کیا لکھا جاتا ہے</th><th>کلائنٹ کیسے دیکھتا ہے</th></tr>
 			<tr>
-				<td><code>{prefix}zdam_code_logs</code> — <em>ریڈمپشن طرز کا</em> ریکارڈ</td>
+				<td><code>{prefix}zdam_code_logs</code> — <em>اندراج جیسا</em> ریکارڈ</td>
 				<td><code>code</code> = دعوتی کوڈ، <code>event_type</code> = <code>registration</code>، <code>is_success</code> = 1، <code>roles_granted</code> = دیے گئے رولز، ایڈمن + صارف کے خانے، نوٹ "Migrate Accounts"</td>
 				<td>Usage Logs فہرست · User Lookup تفصیل</td>
 			</tr>
@@ -928,7 +934,7 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 			</tr>
 		</table>
 		<div class="note">
-			جن کا دعوتی کوڈ نہیں ملتا، ان کے لیے عام admin-audit ریکارڈ رہتا ہے (کوڈ کا خانہ خالی)۔
+			جن کا دعوتی کوڈ نہیں ملتا، ان کے لیے عام انتظامی ریکارڈ رہتا ہے (کوڈ کا خانہ خالی)۔
 			Preview پہلے ہی بتا دیتا ہے کہ کتنے اکاؤنٹس کس زمرے میں ہیں۔
 		</div>
 
@@ -944,14 +950,14 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 			</li>
 			<li>
 				<strong class="path"><em>Preview</em> دبائیں</strong>
-				<div class="expect"><strong>توقع:</strong> تصدیقی جدول میں دو نئی قطاریں — <em>جن کے NUA دعوتی کوڈ ملے</em> کی تعداد اور <em>جن کے دعوتی کوڈ نہیں ملے (صرف admin-action آڈٹ)</em> کی تعداد۔ دونوں کا مجموعہ کل مماثل اکاؤنٹس کے برابر ہوگا۔</div>
+				<div class="expect"><strong>توقع:</strong> تصدیقی جدول میں دو نئی قطاریں — <em>جن کے NUA دعوتی کوڈ ملے</em> کی تعداد اور <em>جن کے دعوتی کوڈ نہیں ملے (صرف انتظامی ریکارڈ)</em> کی تعداد۔ دونوں کا مجموعہ کل مماثل اکاؤنٹس کے برابر ہوگا۔</div>
 			</li>
 			<figure class="shot">
 				<img src="screenshots/02-migrate-preview.png" alt="لائیو staging میں Migrate Accounts پیش نظارہ: ۱,۰۱۸ مماثل اکاؤنٹس، سب کے NUA دعوتی کوڈ ملے" />
 				<figcaption><strong>لائیو staging — Migrate Accounts → Preview</strong>. تصدیقی جدول بتاتا ہے <strong>کل مماثل اکاؤنٹس ۱,۰۱۸</strong>، <strong>جن کے NUA دعوتی کوڈ ملے ۱,۰۱۸</strong>، <strong>جن کے کوڈ نہیں ملے ۰</strong>۔ رولز کی تقسیم (پہلے سے موجود / نئے دیے جائیں گے) اور نمونہ مماثل اکاؤنٹس نیچے نظر آتے ہیں۔</figcaption>
 			</figure>
 			<li>
-				<strong class="path">مائیگریشن چلائیں</strong>
+				<strong class="path">منتقلی چلائیں</strong>
 				کم از کم ایک رسائی رول اور اپنا scope منتخب کر کے تصدیق کریں۔ کامیابی کے پیغام کا انتظار کریں۔
 				<div class="expect"><strong>توقع:</strong> کتنے نئے گرانٹ دیے گئے، یہ بتانے والا کامیابی کا پیغام آئے گا۔</div>
 			</li>
@@ -961,8 +967,8 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 				<div class="expect"><strong>توقع:</strong> ایونٹ = <strong>رجسٹریشن</strong>، نتیجہ = <strong>کامیاب</strong>، اور <strong>کوڈ کے خانے میں صارف کا اصلی دعوتی کوڈ</strong> نظر آئے (خالی نہیں، پلگ ان کا بنایا ہوا کوڈ بھی نہیں)۔</div>
 			</li>
 			<figure class="shot">
-				<img src="screenshots/05-usage-logs.png" alt="لائیو staging میں Usage Logs، فکس سے پہلے کی مائیگریشن قطاریں دکھا رہا ہے" />
-				<figcaption><strong>لائیو staging — Usage Logs</strong>. جو قطاریں نظر آ رہی ہیں (اگست ۸، <code>ADMIN-ACTION</code>، کوڈ خالی) وہ مائیگریشن نے <em>اس فکس سے پہلے</em> لکھیں تھیں — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ مائیگریشن چلانے کے بعد، ملنے والے دعوتی کوڈز <strong>رجسٹریشن / کامیاب</strong> قطاروں میں <strong>کوڈ کا خانہ بھرا ہوا</strong> نظر آئیں گے۔</figcaption>
+				<img src="screenshots/05-usage-logs.png" alt="لائیو staging میں Usage Logs، فکس سے پہلے کی منتقلی قطاریں دکھا رہا ہے" />
+				<figcaption><strong>لائیو staging — Usage Logs</strong>. جو قطاریں نظر آ رہی ہیں (اگست ۸، <code>ADMIN-ACTION</code>، کوڈ خالی) وہ منتقلی نے <em>اس فکس سے پہلے</em> لکھیں تھیں — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ منتقلی چلانے کے بعد، ملنے والے دعوتی کوڈز <strong>رجسٹریشن / کامیاب</strong> قطاروں میں <strong>کوڈ کا خانہ بھرا ہوا</strong> نظر آئیں گے۔</figcaption>
 			</figure>
 			<li>
 				<strong class="path"><em>TRADESAFE → User Lookup</em> چیک کریں</strong>
@@ -970,8 +976,8 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 				<div class="expect"><strong>توقع:</strong> صارف کی تفصیل میں ملنے والا دعوتی کوڈ نظر آئے (اور وہی رجسٹریشن/کامیاب ایونٹ)۔</div>
 			</li>
 			<figure class="shot">
-				<img src="screenshots/06-user-lookup.png" alt="لائیو staging میں User Lookup، فکس سے پہلے مائیگریٹ شدہ صارف کے لیے" />
-				<figcaption><strong>لائیو staging — User Lookup</strong>. فکس سے پہلے مائیگریٹ شدہ صارف کو ڈھونڈنے پر <em>Codes Used: No codes used</em> نظر آتا ہے — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ مائیگریشن دوبارہ چلانے کے بعد، اس صارف کا دعوتی کوڈ یہاں اور Usage Logs میں رجسٹریشن/کامیاب قطار کے طور پر نظر آئے گا۔</figcaption>
+				<img src="screenshots/06-user-lookup.png" alt="لائیو staging میں User Lookup، فکس سے پہلے منتقل شدہ صارف کے لیے" />
+				<figcaption><strong>لائیو staging — User Lookup</strong>. فکس سے پہلے منتقل شدہ صارف کو ڈھونڈنے پر <em>Codes Used: No codes used</em> نظر آتا ہے — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ منتقلی دوبارہ چلانے کے بعد، اس صارف کا دعوتی کوڈ یہاں اور Usage Logs میں رجسٹریشن/کامیاب قطار کے طور پر نظر آئے گا۔</figcaption>
 			</figure>
 			<li>
 				<strong class="path">(صرف ایڈمن) ہر صارف کا usermeta تصدیق کریں</strong>
@@ -979,11 +985,11 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 SELECT user_id, meta_value
 FROM   {prefix}usermeta
 WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
-				<div class="expect"><strong>توقع:</strong> ہر مائیگریٹ شدہ NUA صارف کے لیے ایک قطار، جس کا <code>meta_value</code> = ان کا اصلی دعوتی کوڈ۔</div>
+				<div class="expect"><strong>توقع:</strong> ہر منتقل شدہ NUA صارف کے لیے ایک قطار، جس کا <code>meta_value</code> = ان کا اصلی دعوتی کوڈ۔</div>
 			</li>
 		</ol>
 
-		<div class="ok"><strong>قبول شدہ جب:</strong> مائیگریشن کے بعد ہر صارف کا اصلی دعوتی کوڈ نکالا جا سکے — <code>zdam_code_logs</code> میں (Usage Logs / User Lookup) اور <code>zdam_migrated_invite_code</code> usermeta میں۔ جن کے پاس دعوتی کوڈ تھا، ان کے کوڈ کا خانہ کبھی خالی نہیں۔</div>
+		<div class="ok"><strong>قبول شدہ جب:</strong> منتقلی کے بعد ہر صارف کا اصلی دعوتی کوڈ نکالا جا سکے — <code>zdam_code_logs</code> میں (Usage Logs / User Lookup) اور <code>zdam_migrated_invite_code</code> usermeta میں۔ جن کے پاس دعوتی کوڈ تھا، ان کے کوڈ کا خانہ کبھی خالی نہیں۔</div>
 	</section>
 
 	<!-- ============================ ضرورت ۲ ============================ -->
@@ -991,13 +997,13 @@ WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
 		<h2><span class="num">۲</span> کوڈ امپورٹ اور ایکسپورٹ</h2>
 		<p class="lede">
 			دعوتی کوڈز اب پلگ ان میں <strong>امپورٹ</strong> کیے جا سکتے ہیں (پیسٹ کر کے یا فائل اپ لوڈ کر کے) — تاکہ سرور-انفراسٹرکچر
-			ڈیٹا بیس میں بنے کوڈز صارف اکاؤنٹس سے منسلک کیے جا سکیں۔ پرانا <strong>ایکسپورٹ</strong> (CSV/TXT) الٹی سمت کے لیے پہلے کی طرح موجود ہے۔
+			ڈیٹا بیس میں بنے کوڈز صارف اکاؤنٹس سے جوڑے جا سکیں۔ پرانا <strong>ایکسپورٹ</strong> (CSV/TXT) الٹی سمت کے لیے پہلے کی طرح موجود ہے۔
 		</p>
 
 		<div class="ask">
 			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
 			<blockquote>
-				<p>"دعوتی کوڈ اب صرف پلگ ان کے اندر بن سکتے ہیں، امپورٹ کا کوئی طریقہ نہیں۔ مجھے یا تو اپنے بنائے کوڈز امپورٹ کرنے ہیں (یہ ایک الگ ڈیٹا بیس سے ہوگا جو سرور انفرا چلاتا ہے)، یا بنے ہوئے کوڈز ایکسپورٹ کر کے اپنے سسٹم میں ڈالنے ہیں۔ کیونکہ مجھے انہیں صارف اکاؤنٹس سے منسلک کرنا ہے۔"</p>
+				<p>"دعوتی کوڈ اب صرف پلگ ان کے اندر بن سکتے ہیں، امپورٹ کا کوئی طریقہ نہیں۔ مجھے یا تو اپنے بنائے کوڈز امپورٹ کرنے ہیں (یہ ایک الگ ڈیٹا بیس سے ہوگا جو سرور انفرا چلاتا ہے)، یا بنے ہوئے کوڈز ایکسپورٹ کر کے اپنے سسٹم میں ڈالنے ہیں۔ کیونکہ مجھے انہیں صارف اکاؤنٹس سے جوڑنا ہے۔"</p>
 			</blockquote>
 		</div>
 
@@ -1006,7 +1012,7 @@ WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
 			<ul>
 				<li>TRADESAFE مینیو میں نیا <strong>"Import Codes" صفحہ</strong>: ہر لائن پر ایک کوڈ پیسٹ کریں، یا TXT / CSV / JSON فائل اپ لوڈ کریں۔ CSV فائل میں ہیڈر لائن ہو سکتی ہے (<code>code, code_type, group, batch_name, max_uses, expiration_date, status, notes</code>، …) اور ہر قطار کی قدریں فارم کی ڈیفالٹ پر فوقیت رکھتی ہیں۔</li>
 				<li>امپورٹ سے <strong>پہلے پیش نظارہ</strong>: صفحہ کل قطاریں، امپورٹ کے لیے تیار درست کوڈز، اور چھوڑے گئے (نقل / غلط) کوڈز — وجہ کے ساتھ — گنتا ہے۔ <em>Import Codes</em> دبانے تک کچھ بھی نہیں لکھا جاتا۔</li>
-				<li>امپورٹ شدہ کوڈز عام <strong>Codes</strong> فہرست میں بیچ کے نام کے ساتھ آتے ہیں، اور پلگ ان کے بنائے ہوئے کوڈز کی طرح کام کرتے ہیں (منسلک، ریڈیم، ایکسپورٹ قابل)۔</li>
+				<li>امپورٹ شدہ کوڈز عام <strong>Codes</strong> فہرست میں بیچ کے نام کے ساتھ آتے ہیں، اور پلگ ان کے بنائے ہوئے کوڈز کی طرح کام کرتے ہیں (جوڑے جا سکتے ہیں، استعمال ہو سکتے ہیں، نکالے جا سکتے ہیں)۔</li>
 				<li><strong>Export</strong> (CSV / TXT) پہلے سے موجود تھا اور اسی طرح ہے — اب کوڈز دونوں سمتوں میں چلتے ہیں۔</li>
 			</ul>
 		</div>
@@ -1055,11 +1061,11 @@ TSG-2M8X5B,access,unlimited,never,</code></pre>
 			<li>
 				<strong class="path"><em>TRADESAFE → Codes</em> میں تصدیق کریں</strong>
 				بیچ کا نام یا کوئی امپورٹ شدہ کوڈ تلاش کریں۔
-				<div class="expect"><strong>توقع:</strong> امپورٹ شدہ کوڈ status <strong>Unused</strong>، درست کوڈ ٹائپ، گروپ، اور آپ کا دیا ہوا بیچ نام کے ساتھ نظر آئیں گے۔ اب یہ عام کوڈز کی طرح منسلک / ریڈیم ہو سکتے ہیں۔</div>
+				<div class="expect"><strong>توقع:</strong> امپورٹ شدہ کوڈ status <strong>Unused</strong>، درست کوڈ ٹائپ، گروپ، اور آپ کا دیا ہوا بیچ نام کے ساتھ نظر آئیں گے۔ اب یہ عام کوڈز کی طرح جوڑے / استعمال ہو سکتے ہیں۔</div>
 			</li>
 			<figure class="shot">
 				<img src="screenshots/07-codes-list.png" alt="لائیو staging میں Codes فہرست، موجودہ دعوتی کوڈز کے ساتھ" />
-				<figcaption><strong>لائیو staging — TRADESAFE → Codes</strong>. موجودہ فہرست (<em>کل ۱۲ میں سے ۱ سے ۱۲ دکھائے جا رہے ہیں</em>) اصلی رجسٹریشن دعوتی کوڈز دکھاتی ہے۔ ایک بار امپورٹ چلانے پر، امپورٹ شدہ بیچ یہاں status <strong>Unused</strong> کے ساتھ آئے گا، پلگ ان کے بنائے ہوئے کوڈز کی طرح منسلک ہو سکے گا۔</figcaption>
+				<figcaption><strong>لائیو staging — TRADESAFE → Codes</strong>. موجودہ فہرست (<em>کل ۱۲ میں سے ۱ سے ۱۲ دکھائے جا رہے ہیں</em>) اصلی رجسٹریشن دعوتی کوڈز دکھاتی ہے۔ ایک بار امپورٹ چلانے پر، امپورٹ شدہ بیچ یہاں status <strong>Unused</strong> کے ساتھ آئے گا، پلگ ان کے بنائے ہوئے کوڈز کی طرح جوڑا جا سکے گا۔</figcaption>
 			</figure>
 		</ol>
 
@@ -1080,16 +1086,16 @@ TSG-2M8X5B,access,unlimited,never,</code></pre>
 
 	<!-- ============================ ضرورت ۳ ============================ -->
 	<section>
-		<h2><span class="num">۳</span> FSLM انکرپشن کلید — مائیگریشن کا دن (سرور)</h2>
+		<h2><span class="num">۳</span> FSLM خفیہ کلید — منتقلی کا دن (سرور)</h2>
 		<p class="lede">
-			یہ <strong>سرور کی طرف</strong> کا کام ہے، پلگ ان کی خصوصیت نہیں۔ لائسنس مینیجر کی انکرپشن کلید ایک <strong>فائل</strong> میں ہوتی ہے،
-			ڈیٹا بیس میں نہیں۔ نئے سرور پر ڈیٹا بیس کے ساتھ اسے بھی کاپی کرنا ضروری ہے؛ ورنہ پہلے فروخت ہونے والا ہر پروڈکٹ کلید ناقابلِ پڑھنے بن جائے گا۔
+			یہ <strong>سرور کی طرف</strong> کا کام ہے، پلگ ان کی خصوصیت نہیں۔ لائسنس مینیجر کی خفیہ کلید ایک <strong>فائل</strong> میں ہوتی ہے،
+			ڈیٹا بیس میں نہیں۔ نئے سرور پر ڈیٹا بیس کے ساتھ اسے بھی کاپی کرنا ضروری ہے؛ ورنہ پہلے فروخت ہونے والی ہر پروڈکٹ کی چابی نہیں کھلے گی۔
 		</p>
 
 		<div class="ask">
 			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
 			<blockquote>
-				<p>"مائیگریشن کے دن کے لیے (سرور، پلگ ان نہیں): <code>wp-content/uploads/fslm_files/encryption_key.php</code> کو ڈیٹا بیس کے ساتھ نئے سرور پر کاپی کرنا ضروری ہے۔ لائسنس مینیجر کی انکرپشن کلید اس فائل میں ہوتی ہے، ڈیٹا بیس میں نہیں — یہ نہ ہونے پر ہر فروخت شدہ کلید ناقابلِ پڑھنے بن جاتی ہے۔"</p>
+				<p>"منتقلی کے دن کے لیے (سرور، پلگ ان نہیں): <code>wp-content/uploads/fslm_files/encryption_key.php</code> کو ڈیٹا بیس کے ساتھ نئے سرور پر کاپی کرنا ضروری ہے۔ لائسنس مینیجر کی خفیہ کلید اس فائل میں ہوتی ہے، ڈیٹا بیس میں نہیں — یہ نہ ہونے پر ہر فروخت شدہ چابی نہیں کھلے گی۔"</p>
 			</blockquote>
 		</div>
 
@@ -1097,7 +1103,7 @@ TSG-2M8X5B,access,unlimited,never,</code></pre>
 			<span class="title">اس اپ ڈیٹ میں کیسے نمٹا گیا</span>
 			<ul>
 				<li>یہ <strong>پلگ ان خود کاپی نہیں کر سکتا</strong> — کلید کی فائل پلگ ان سے باہر ہے۔ اس لیے حل دستاویزات + ایک حفاظتی انتباہ ہے۔</li>
-				<li><strong>مائیگریشن ڈے رن بک</strong>: <code>docs/MIGRATION.md</code> اور نیچے دیے گئے مراحل پرانے سرور → نئے سرور کے لیے صحیح کاپی اور <code>sha256</code> تصدیق کے احکامات دیتے ہیں۔</li>
+				<li><strong>منتقلی کے دن کے لیے ہدایات</strong>: <code>docs/MIGRATION.md</code> اور نیچے دیے گئے مراحل پرانے سرور → نئے سرور کے لیے صحیح کاپی اور <code>sha256</code> تصدیق کے احکامات دیتے ہیں۔</li>
 				<li><strong>ڈیش بورڈ حفاظتی جال</strong>: سرور پر FSLM نصب ہو لیکن کلید کی فائل نہ ہو، تو TRADESAFE ڈیش بورڈ سرخ <em>"FSLM encryption key missing"</em> نوٹس دکھاتا ہے — صحیح متوقع راستے کے ساتھ — تاکہ گاہکوں پر اثر پڑنے سے پہلے مسئلہ نظر آئے۔</li>
 			</ul>
 		</div>
@@ -1105,10 +1111,10 @@ TSG-2M8X5B,access,unlimited,never,</code></pre>
 		<div class="alert">
 			<strong>اہم فائل:</strong>
 			<code>wp-content/uploads/fslm_files/encryption_key.php</code>
-			— نئے سرور پر یہ نہ ہونے پر پہلے فروخت شدہ کلیدز ڈکرپٹ نہیں ہو سکتیں۔
+			— نئے سرور پر یہ نہ ہونے پر پہلے فروخت شدہ چابیاں کھولی نہیں جا سکتیں۔
 		</div>
 
-		<h3>مائیگریشن سے پہلے (پرانا سرور)</h3>
+		<h3>منتقلی سے پہلے (پرانا سرور)</h3>
 		<ol class="steps">
 			<li>
 				<strong class="path">تصدیق کریں کہ کلید کی فائل موجود ہے</strong>
@@ -1122,7 +1128,7 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 			</li>
 		</ol>
 
-		<h3>مائیگریشن (نیا سرور)</h3>
+		<h3>منتقلی (نیا سرور)</h3>
 		<ol class="steps">
 			<li>
 				<strong class="path">ڈیٹا بیس کاپی کریں</strong>
@@ -1144,13 +1150,13 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 				<figcaption><strong>لائیو staging — TRADESAFE → Access Manager</strong> — ڈیش بورڈ جیسا staging سرور پر نظر آتا ہے۔ staging پر FSLM نہیں ہے، اس لیے کسی انتباہ کی توقع نہیں؛ نئے پروڈکشن سرور پر FSLM موجود مگر <code>encryption_key.php</code> غائب ہو تو، ان اعداد و شمار کے اوپر صحیح متوقع راستے کے ساتھ سرخ نوٹس آئے گا۔</figcaption>
 			</figure>
 			<li>
-				<strong class="path">کسی پرانے پروڈکٹ کلید سے سموک ٹیسٹ کریں</strong>
-				لائسنس/پروڈکٹ کلید کی تفصیل کا صفحہ کھولیں اور تصدیق کریں کہ محفوظ شدہ (انکرپٹڈ) ٹوکن اب بھی ڈکرپٹ ہوتا ہے۔
+				<strong class="path">کسی پرانی پروڈکٹ کلید سے جانچ کریں</strong>
+				لائسنس/پروڈکٹ کلید کی تفصیل کا صفحہ کھولیں اور دیکھیں کہ محفوظ شدہ خفیہ ٹوکن اب بھی کھلتا ہے۔
 				<div class="expect"><strong>توقع:</strong> پہلے فروخت شدہ کلیدز پڑھنے کے قابل رہیں۔</div>
 			</li>
 		</ol>
 
-		<div class="ok"><strong>قبول شدہ جب:</strong> <code>wp-content/uploads/fslm_files/encryption_key.php</code> ڈیٹا بیس کے ساتھ نئے سرور پر کاپی ہو، اس کا <code>sha256</code> ملے، ڈیش بورڈ پر کلید نہ ہونے کا انتباہ نہ ہو، اور پرانی پروڈکٹ کلید اب بھی ڈکرپٹ ہو۔</div>
+		<div class="ok"><strong>قبول شدہ جب:</strong> <code>wp-content/uploads/fslm_files/encryption_key.php</code> ڈیٹا بیس کے ساتھ نئے سرور پر کاپی ہو، اس کا <code>sha256</code> ملے، ڈیش بورڈ پر کلید نہ ہونے کا انتباہ نہ ہو، اور پرانی پروڈکٹ کلید اب بھی کھلتی ہو۔</div>
 	</section>
 
 	<!-- ============================ چیک لسٹ ============================ -->
@@ -1158,18 +1164,18 @@ sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># �
 		<h2><span class="num">✓</span> حتمی منظوری کی چیک لسٹ</h2>
 		<ul class="check">
 			<li>Migrate Accounts کا پیش نظارہ ملنے والے بمقابلہ نہ ملنے والے دعوتی کوڈز کی اطلاع دیتا ہے۔</li>
-			<li>مائیگریشن کے بعد <em>Usage Logs</em> رجسٹریشن/کامیاب قطاریں صارف کے دعوتی کوڈ کے ساتھ دکھاتا ہے۔</li>
-			<li>مائیگریشن کے بعد <em>User Lookup</em> صارف کا دعوتی کوڈ دکھاتا ہے۔</li>
-			<li><code>zdam_migrated_invite_code</code> usermeta میں ہر مائیگریٹ شدہ صارف کا اصلی کوڈ ہوتا ہے۔</li>
+			<li>منتقلی کے بعد <em>Usage Logs</em> رجسٹریشن/کامیاب قطاریں صارف کے دعوتی کوڈ کے ساتھ دکھاتا ہے۔</li>
+			<li>منتقلی کے بعد <em>User Lookup</em> صارف کا دعوتی کوڈ دکھاتا ہے۔</li>
+			<li><code>zdam_migrated_invite_code</code> usermeta میں ہر منتقل شدہ صارف کا اصلی کوڈ ہوتا ہے۔</li>
 			<li>Import Codes: پیسٹ اور فائل اپ لوڈ دونوں کام کرتے ہیں؛ پیش نظارہ کے شمار ملتے ہیں؛ کوڈز Codes فہرست میں آتے ہیں۔</li>
 			<li>Export Codes: CSV/TXT ایکسپورٹ اب بھی قابلِ استعمال فائل بناتا ہے۔</li>
-			<li>مائیگریشن کا دن: <code>encryption_key.php</code> ڈیٹا بیس کے ساتھ کاپی ہوا؛ نئے سرور پر <code>sha256</code> ملا۔</li>
+			<li>منتقلی کا دن: <code>encryption_key.php</code> ڈیٹا بیس کے ساتھ کاپی ہوا؛ نئے سرور پر <code>sha256</code> ملا۔</li>
 			<li>ڈیش بورڈ "FSLM encryption key missing" نوٹس صرف اس وقت دکھائے جب کلید واقعی غائب ہو۔</li>
 		</ul>
 	</section>
 
 	<footer>
-		TradeSafe Access Manager — تصدیقی گائیڈ · مکمل سرور رن بک کے لیے <code>docs/MIGRATION.md</code> دیکھیں۔
+		TradeSafe Access Manager — تصدیقی گائیڈ · مکمل سرور ہدایات کے لیے <code>docs/MIGRATION.md</code> دیکھیں۔
 	</footer>
 
 	</div><!-- /content-ur -->
