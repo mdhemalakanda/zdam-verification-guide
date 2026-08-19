@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeSafe Access Manager — Client Verification Guide</title>
+<style>
+	:root {
+		--ink: #1b2430;
+		--muted: #5b6b7b;
+		--line: #dde4ea;
+		--paper: #ffffff;
+		--bg: #f4f7fa;
+		--accent: #0f766e;
+		--accent-soft: #e6f4f2;
+		--amber: #b45309;
+		--amber-soft: #fdf3e3;
+		--red: #b91c1c;
+		--red-soft: #fdecec;
+		--green: #15803d;
+		--green-soft: #e9f7ee;
+		--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+	}
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--ink);
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans Bengali", "Noto Nastaliq Urdu", "Noto Naskh Arabic", sans-serif;
+		line-height: 1.6;
+		font-size: 15px;
+	}
+
+	.wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+	.lang-switch { display: flex; gap: 10px; margin-bottom: 24px; }
+	.lang-switch button {
+		flex: 1; padding: 12px; border: 1px solid var(--line); background: #fff; border-radius: 10px;
+		font-size: 15px; font-weight: 700; cursor: pointer; color: var(--ink); transition: all .15s ease;
+	}
+	.lang-switch button:hover { border-color: var(--accent); color: var(--accent); }
+	.lang-switch button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+	.hidden { display: none; }
+
+	header.hero {
+		background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
+		color: #fff;
+		border-radius: 14px;
+		padding: 36px 40px;
+		margin-bottom: 28px;
+	}
+
+	header.hero h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: .2px; }
+	header.hero p { margin: 0; opacity: .85; font-size: 15px; }
+	header.hero .badges { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+	header.hero .badge {
+		background: rgba(255,255,255,.14);
+		border: 1px solid rgba(255,255,255,.25);
+		padding: 4px 12px;
+		border-radius: 999px;
+		font-size: 12.5px;
+	}
+
+	section { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 28px 34px; margin-bottom: 28px; }
+
+	section > h2 { margin: 0 0 4px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+	section > h2 .num {
+		background: var(--accent); color: #fff; width: 30px; height: 30px; border-radius: 8px;
+		display: inline-flex; align-items: center; justify-content: center; font-size: 15px; flex: 0 0 auto;
+	}
+	section > p.lede { margin: 6px 0 18px; color: var(--muted); }
+
+	.blocker { display: inline-block; background: var(--red-soft); color: var(--red); font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px; }
+
+	h3 { font-size: 16px; margin: 26px 0 10px; padding-top: 16px; border-top: 1px dashed var(--line); }
+	h3:first-of-type { border-top: 0; padding-top: 0; margin-top: 8px; }
+
+	ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+	ol.steps > li { counter-increment: step; position: relative; padding: 0 0 20px 56px; margin: 0; }
+	ol.steps > li::before {
+		content: counter(step); position: absolute; left: 0; top: 0;
+		width: 36px; height: 36px; border-radius: 50%;
+		background: var(--accent-soft); color: var(--accent);
+		display: inline-flex; align-items: center; justify-content: center;
+		font-weight: 700; font-size: 15px; border: 1px solid var(--accent);
+	}
+	ol.steps > li::after { content: ""; position: absolute; left: 17px; top: 40px; bottom: 0; width: 2px; background: var(--line); }
+	ol.steps > li:last-child::after { display: none; }
+	ol.steps strong.path { display: block; font-size: 15px; margin-bottom: 4px; }
+	ol.steps .expect { margin: 8px 0 0; background: var(--green-soft); border-left: 3px solid var(--green); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14px; }
+	ol.steps .expect strong { color: var(--green); }
+
+	table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
+	th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+	th { background: #f0f4f7; font-weight: 600; }
+
+	code {
+		font-family: var(--mono); font-size: .92em; background: #eef2f5;
+		padding: 2px 6px; border-radius: 5px; word-break: break-all;
+	}
+	pre {
+		font-family: var(--mono); font-size: 13.5px; background: #0f172a; color: #e2e8f0;
+		padding: 16px 18px; border-radius: 10px; overflow-x: auto; line-height: 1.5; margin: 12px 0;
+	}
+	pre .c { color: #7dd3fc; }
+	pre code { background: none; color: inherit; padding: 0; }
+
+	.note { background: var(--amber-soft); border-left: 3px solid var(--amber); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 12px 0; }
+	.alert { background: var(--red-soft); border-left: 3px solid var(--red); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 14px 0; }
+	.alert strong { color: var(--red); }
+	.ok { background: var(--green-soft); border-left: 3px solid var(--green); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+	.ok strong { color: var(--green); }
+
+	.ask { background: var(--amber-soft); border-left: 3px solid var(--amber); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; font-size: 14px; }
+	.ask .title { display: block; font-weight: 700; color: var(--amber); margin-bottom: 4px; font-size: 13px; letter-spacing: .3px; text-transform: uppercase; }
+	.ask blockquote { margin: 6px 0 0; padding: 0 0 0 12px; border-left: 2px solid var(--amber); color: #4a3a17; }
+	.ask blockquote p { margin: 0 0 6px; }
+	.ask blockquote p:last-child { margin-bottom: 0; }
+
+	.fixed { background: var(--green-soft); border-left: 3px solid var(--green); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; font-size: 14px; }
+	.fixed .title { display: block; font-weight: 700; color: var(--green); margin-bottom: 8px; font-size: 13px; letter-spacing: .3px; text-transform: uppercase; }
+	.fixed ul { margin: 0; padding-left: 18px; }
+	.fixed li { margin: 4px 0; }
+
+	.shot { margin: 16px 0 20px; }
+	.shot img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 2px 10px rgba(27,36,48,.08); display: block; }
+	.shot figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+	.shot figcaption strong { color: var(--ink); }
+
+	ul.check { list-style: none; padding: 0; margin: 10px 0 0; }
+	ul.check li { padding: 4px 0 4px 30px; position: relative; }
+	ul.check li::before { content: "☐"; position: absolute; left: 0; top: 4px; font-size: 16px; color: var(--accent); }
+
+	footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 12px; }
+
+	.rtl { direction: rtl; text-align: right; }
+	.rtl th, .rtl td { text-align: right; }
+	.rtl ol.steps > li { padding: 0 56px 20px 0; }
+	.rtl ol.steps > li::before { left: auto; right: 0; }
+	.rtl ol.steps > li::after { left: auto; right: 17px; }
+	.rtl ul.check li { padding: 4px 30px 4px 0; }
+	.rtl ul.check li::before { left: auto; right: 0; }
+	.rtl .ask blockquote { border-left: none; border-right: 2px solid var(--amber); padding: 0 12px 0 0; }
+	.rtl .note, .rtl .alert, .rtl .ok, .rtl .ask, .rtl .fixed { border-left: none; border-radius: 8px 0 0 8px; }
+	.rtl .note { border-right: 3px solid var(--amber); }
+	.rtl .alert { border-right: 3px solid var(--red); }
+	.rtl .ok { border-right: 3px solid var(--green); }
+	.rtl .ask { border-right: 3px solid var(--amber); }
+	.rtl .fixed { border-right: 3px solid var(--green); }
+	.rtl ol.steps .expect { border-left: none; border-right: 3px solid var(--green); border-radius: 8px 0 0 8px; }
+	.rtl pre, .rtl code { direction: ltr; text-align: left; unicode-bidi: embed; }
+	@media print {
+		body { background: #fff; }
+		section { break-inside: avoid; }
+		header.hero { background: #0f172a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+	}
+	@media (max-width: 640px) {
+		.wrap { padding: 20px 14px 60px; }
+		section, header.hero { padding: 22px; }
+		ol.steps > li { padding-left: 48px; }
+	}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+	<div class="lang-switch">
+		<button id="btn-en" class="active" type="button">English</button>
+		<button id="btn-bn" type="button">বাংলা</button>
+		<button id="btn-ur" type="button">اردو (پاکستان)</button>
+	</div>
+
+	<!-- ============================ ENGLISH ============================ -->
+	<div id="content-en">
+
+	<header class="hero">
+		<h1>TradeSafe Access Manager — Client Verification Guide</h1>
+		<p>For each of the three requirements: <strong>what you asked for</strong>, <strong>how the build fixes it</strong>,
+		and the <strong>step-by-step checks</strong> to verify it on the site — so you can sign off with confidence.</p>
+		<div class="badges">
+			<span class="badge">Requirement 1 · Migrate Accounts preserve invite codes</span>
+			<span class="badge">Requirement 2 · Import / Export codes</span>
+			<span class="badge">Requirement 3 · FSLM encryption key (migration day)</span>
+		</div>
+	</header>
+
+	<div class="note">
+		<strong>All screenshots in this guide were captured from the live staging environment</strong> —
+		<code>staging.store.tradesafe.gg</code> (admin account, read-only visits; no client data was changed).
+		The one exception is the import <em>success</em> banner, which is a local demonstration because running a real
+		import would modify staging data.
+	</div>
+
+	<!-- ============================ REQUIREMENT 1 ============================ -->
+	<section>
+		<h2><span class="num">1</span> Migrate Accounts keeps each user's invite code <span class="blocker">BLOCKER</span></h2>
+		<p class="lede">
+			The migration previously granted access roles but never recorded <em>which invite code</em> a user
+			registered with. Because every existing product-key token is encrypted with that code, it must survive
+			migration. This build resolves the NUA invite code per user and stores it in the plugin's data.
+		</p>
+
+		<div class="ask">
+			<span class="title">What the client asked for</span>
+			<blockquote>
+				<p>"Migrate Accounts loses the invite codes. It only grants roles; it never reads which code a user
+				registered with, and the audit rows it writes have an empty code column. I need the exact code string
+				per user after migration — all existing product key tokens are encrypted with it."</p>
+				<p>"During migration, look up the user's NUA code (usermeta <code>nua_invcode_used</code> →
+				<code>invitation_code</code> post title) and write it into the <code>zdam_code_logs</code> row like a
+				real redemption (code filled in, <code>is_success=1</code>, <code>event_type</code> registration, not
+				admin_action). Or dump it into a usermeta per user — just tell me where it ends up."</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">How this build fixes it</span>
+			<ul>
+				<li><strong>During migration</strong> the plugin looks up each user's NUA invite code — from the user's
+				<code>nua_invcode_used</code> meta to the <code>invitation_code</code> post title — and records it.</li>
+				<li>Users with a resolvable code get a <strong>redemption-style log row</strong> in the Usage Logs:
+				<code>event_type = registration</code>, <code>is_success = 1</code>, <strong>code column = the exact
+				invite-code string</strong>, roles granted, note "Migrate Accounts".</li>
+				<li>The same code is also saved <strong>on the user's profile</strong> as
+				<code>zdam_migrated_invite_code</code> usermeta — so you can query it either from the logs or from the
+				usermeta table.</li>
+				<li>Users with <strong>no resolvable code</strong> still get a normal admin-action audit row (empty code
+				column). The <em>Preview</em> button tells you in advance exactly how many accounts fall into each bucket
+				before you grant anything.</li>
+			</ul>
+		</div>
+
+		<h3>Where the invite code ends up (answer to "where does it go")</h3>
+		<table>
+			<tr><th>Location</th><th>What is written</th><th>How the client sees it</th></tr>
+			<tr>
+				<td><code>{prefix}zdam_code_logs</code> — <em>redemption-style</em> log row</td>
+				<td><code>code</code> = the invite-code string, <code>event_type</code> = <code>registration</code>, <code>is_success</code> = 1, <code>roles_granted</code> = granted roles, admin + target user fields, note "Migrate Accounts"</td>
+				<td>Usage Logs list · User Lookup detail</td>
+			</tr>
+			<tr>
+				<td>Usermeta <code>zdam_migrated_invite_code</code> (per user)</td>
+				<td>The exact invite-code string used at registration</td>
+				<td>User Lookup detail · SQL <code>SELECT user_id, meta_value FROM {prefix}usermeta WHERE meta_key='zdam_migrated_invite_code'</code></td>
+			</tr>
+		</table>
+		<div class="note">
+			Users whose invite code cannot be resolved get a normal admin-audit row (no code column content).
+			The preview tells you in advance how many accounts fall into each bucket.
+		</div>
+
+		<h3>Step-by-step checks</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">Prepare a reference account</strong>
+				Pick a user on the test site who is known to have registered with a New User Approve invite code
+				(e.g. one that shows in NUA → Invitation Codes as "registered"). Note their email and the code string
+				they used.
+			</li>
+			<li>
+				<strong class="path">Open <em>TRADESAFE → Migrate Accounts</em></strong>
+				Confirm the intro explains that invite codes are resolved and recorded, and that the page lists the
+				scope options (e.g. "Users who used a New User Approve invite code").
+			</li>
+			<li>
+				<strong class="path">Click <em>Preview</em></strong>
+				<div class="expect"><strong>Expected:</strong> the validation table shows two new rows — an
+				<em>Accounts with a resolvable NUA invite code</em> count and an
+				<em>Accounts with no resolvable invite code (admin-action audit only)</em> count. The two numbers
+				add up to the total matched accounts.</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/02-migrate-preview.png" alt="Live staging Migrate Accounts preview: 1,018 matched accounts, all with resolvable NUA invite codes" />
+				<figcaption><strong>Live staging — Migrate Accounts → Preview</strong>. The validation table reports
+				<strong>Total matched accounts 1,018</strong>, <strong>Accounts with a resolvable NUA invite code 1,018</strong>,
+				<strong>no resolvable invite code 0</strong>. The role breakdown (already hold / will be granted) and the
+				sample matched accounts appear below.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">Run the migration</strong>
+				Select at least one access role and your scope, then confirm. Wait for the success notice.
+				<div class="expect"><strong>Expected:</strong> a success message stating how many new grants were applied.</div>
+			</li>
+			<li>
+				<strong class="path">Check <em>TRADESAFE → Usage Logs</em></strong>
+				Filter by the reference user's email. Find the row for this user.
+				<div class="expect"><strong>Expected:</strong> Event = <strong>Registration</strong>, Result = <strong>Success</strong>,
+				and the <strong>Code column shows the invite-code string</strong> the user actually registered with
+				(not empty, not a generated plugin code).</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/05-usage-logs.png" alt="Live staging Usage Logs showing the pre-fix migration rows" />
+				<figcaption><strong>Live staging — Usage Logs</strong>. The rows shown (Aug 8, <code>ADMIN-ACTION</code>, no
+				code populated) were written by the migration <em>before</em> this fix — exactly the gap the fix closes.
+				After running the updated migration, resolvable invite codes appear as
+				<strong>Registration / Success</strong> rows with the <strong>Code column populated</strong>.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">Check <em>TRADESAFE → User Lookup</em></strong>
+				Search the reference user's email.
+				<div class="expect"><strong>Expected:</strong> the user detail shows the resolved invite code
+				(and the same Registration/Success event).</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/06-user-lookup.png" alt="Live staging User Lookup for a user migrated before the fix" />
+				<figcaption><strong>Live staging — User Lookup</strong>. Searching a user who was migrated before the fix shows
+				<em>Codes Used: No codes used</em> — confirming the exact gap this fix closes. After re-running the updated
+				migration, the user's invite code appears here and as a Registration/Success row in Usage Logs.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">(Admin only) Confirm the per-user usermeta</strong>
+				<pre><code><span class="c">-- replace {prefix} with your table prefix (default wp_)</span>
+SELECT user_id, meta_value
+FROM   {prefix}usermeta
+WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
+				<div class="expect"><strong>Expected:</strong> one row per migrated NUA user with
+				<code>meta_value</code> = their exact invite-code string.</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>Acceptance:</strong> the exact invite-code string per user is retrievable after migration —
+		both in <code>zdam_code_logs</code> (Usage Logs / User Lookup) and in the <code>zdam_migrated_invite_code</code>
+		usermeta. No code column is empty for accounts that had an invite code.</div>
+	</section>
+
+	<!-- ============================ REQUIREMENT 2 ============================ -->
+	<section>
+		<h2><span class="num">2</span> Import and Export codes</h2>
+		<p class="lede">
+			Invite codes can now be <strong>imported</strong> into the plugin (paste or file upload) so codes generated
+			through the server-infrastructure database can be assigned to user accounts. The existing
+			<strong>export</strong> (CSV/TXT) remains available for the reverse direction.
+		</p>
+
+		<div class="ask">
+			<span class="title">What the client asked for</span>
+			<blockquote>
+				<p>"Invite codes can only be generated inside the plugin now, no import. I either need to be able to
+				import codes we generate (this will be done through a different database that runs the server infra),
+				or export the ones generated so I can import them into our system. Because I need to assign them to
+				user accounts."</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">How this build fixes it</span>
+			<ul>
+				<li><strong>New "Import Codes" page</strong> under TRADESAFE: paste codes one per line, or upload a
+				TXT / CSV / JSON file. CSV files may include a header row (<code>code, code_type, group, batch_name,
+				max_uses, expiration_date, status, notes</code>, …) and per-row values override the form defaults.</li>
+				<li><strong>Preview before importing</strong>: the page counts total rows, valid codes ready to import,
+				and skipped (duplicate / invalid) codes with a reason — nothing is written until you click
+				<em>Import Codes</em>.</li>
+				<li>Imported codes land in the normal <strong>Codes</strong> list with a batch name, and behave exactly
+				like generated codes (assignable, redeemable, exportable).</li>
+				<li><strong>Export</strong> (CSV / TXT) already existed and is unchanged — codes now flow in both
+				directions.</li>
+			</ul>
+		</div>
+
+		<h3>Part A — Import codes</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">Open <em>TRADESAFE → Import Codes</em></strong>
+				A new submenu page under the TRADESAFE menu. If you don't see it, refresh the admin menu.
+			</li>
+			<li>
+				<strong class="path">Paste codes — one per line</strong>
+				Select "Paste codes" and paste a handful of test codes, e.g.:
+				<pre><code>TSG-7F3K9Q
+TSG-2M8X5B
+TSG-9W4R6T</code></pre>
+			</li>
+			<li>
+				<strong class="path">OR upload a file</strong>
+				Select "Upload a file" and choose a <code>.txt</code> / <code>.csv</code> file. The file content is
+				loaded into the textarea automatically. CSV files may include a header row, e.g.:
+				<pre><code>code,code_type,max_uses,expiration_date,notes
+TSG-7F3K9Q,access,1,2026-12-31,batch from infra DB
+TSG-2M8X5B,access,unlimited,never,</code></pre>
+				<div class="note">Recognized CSV columns: <code>code, code_type, group, batch_name,
+				default_account_role, roles_granted, max_uses, used_count, expiration_date, status, redirect_url, notes</code>.
+				Per-row values override the form defaults.</div>
+			</li>
+			<li>
+				<strong class="path">Set the form defaults</strong>
+				Choose Code Type, Group, and a Batch Name (e.g. <code>imported-june-batch</code>). Max Uses and
+				Expiration behave like Generate Codes.
+			</li>
+			<li>
+				<strong class="path">Click <em>Preview Import</em></strong>
+				<div class="expect"><strong>Expected:</strong> a preview panel with <em>Total rows detected</em>,
+				<em>Valid codes (ready to import)</em>, and <em>Skipped</em> counts. Duplicates, empty lines, and
+				invalid values are listed with a reason and excluded.</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/03-import-preview.png" alt="Live staging Import Codes preview: 3 rows detected, 3 valid, 0 skipped" />
+				<figcaption><strong>Live staging — Import Codes → Preview</strong>. A pasted CSV with a header row is analyzed:
+				<strong>Total rows detected 3</strong>, <strong>Valid codes (ready to import) 3</strong>,
+				<strong>Skipped 0</strong>. Per-row values (here <code>code_type=access</code>) are read from the CSV columns.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">Click <em>Import Codes</em></strong>
+				<div class="expect"><strong>Expected:</strong> a success message "<em>N code(s) imported successfully</em>".</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/04-import-success.png" alt="Import success banner (local demonstration)" />
+				<figcaption><strong>Import → Success (local demonstration).</strong> The actual import is <em>not</em> executed
+				on the staging server so that client data is untouched. The green banner reports
+				<em>N code(s) imported successfully</em>.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">Verify in <em>TRADESAFE → Codes</em></strong>
+				Search the batch name or one of the imported codes.
+				<div class="expect"><strong>Expected:</strong> the imported codes appear with status <strong>Unused</strong>,
+				correct code type, group, and the batch name you set. They can now be assigned / redeemed like
+				generated codes.</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/07-codes-list.png" alt="Live staging Codes list with the current invite codes" />
+				<figcaption><strong>Live staging — TRADESAFE → Codes</strong>. The current list (<em>Showing 1 to 12 of 12
+				codes</em>) shows the real registration invite codes. Once an import is run, the imported batch appears
+				here with status <strong>Unused</strong>, assignable like generated codes.</figcaption>
+			</figure>
+		</ol>
+
+		<h3>Part B — Export codes (existing feature)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">Open <em>TRADESAFE → Codes</em></strong>
+				Apply a filter (status, type, batch) or select rows.
+			</li>
+			<li>
+				<strong class="path">Click <em>Export CSV</em> or <em>Export TXT</em></strong>
+				<div class="expect"><strong>Expected:</strong> a file downloads with the current filtered codes
+				(including type, group, batch, max_uses, status). This is the file you can import into your
+				server-infrastructure database.</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>Acceptance:</strong> externally generated codes can be imported (paste or file, with
+		preview) and plugin-generated codes can be exported (CSV/TXT) — codes flow both directions.</div>
+	</section>
+
+	<!-- ============================ REQUIREMENT 3 ============================ -->
+	<section>
+		<h2><span class="num">3</span> FSLM encryption key — migration day (server)</h2>
+		<p class="lede">
+			This is a <strong>server-side</strong> requirement, not a plugin feature. The license manager's
+			encryption key lives in a file, not the database. It must be copied to the new server along with the
+			database, or every already-sold product key becomes unreadable.
+		</p>
+
+		<div class="ask">
+			<span class="title">What the client asked for</span>
+			<blockquote>
+				<p>"For migration day (server, not plugin): <code>wp-content/uploads/fslm_files/encryption_key.php</code>
+				must be copied to the new server along with the DB. The license manager's encryption key lives in that
+				file, not the database — if it's missing, every already-sold key becomes unreadable."</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">How this build handles it</span>
+			<ul>
+				<li>This is <strong>not something the plugin can copy for you</strong> — the key file lives outside the
+				plugin. So the fix is documentation + a safety warning.</li>
+				<li><strong>Migration-day runbook</strong>: <code>docs/MIGRATION.md</code> and the steps below give the
+				exact copy + <code>sha256</code> verification commands for old server → new server.</li>
+				<li><strong>Dashboard safety net</strong>: if the server has FSLM installed but the key file is missing,
+				the TRADESAFE dashboard shows a red <em>"FSLM encryption key missing"</em> notice with the exact expected
+				path — so the gap is visible before customers are affected.</li>
+			</ul>
+		</div>
+
+		<div class="alert">
+			<strong>Critical file:</strong>
+			<code>wp-content/uploads/fslm_files/encryption_key.php</code>
+			— if it is missing on the new server, already-sold keys cannot be decrypted.
+		</div>
+
+		<h3>Pre-migration (old server)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">Confirm the key file exists</strong>
+				<pre><code>ls -la wp-content/uploads/fslm_files/encryption_key.php
+sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># record this hash</span></code></pre>
+				<div class="expect"><strong>Expected:</strong> the file exists and is readable. Record the
+				<code>sha256</code> hash — you will compare it on the new server.</div>
+			</li>
+			<li>
+				<strong class="path">Back everything up</strong>
+				Full file copy + full database dump. The key file must be inside the copy of
+				<code>wp-content/uploads/fslm_files/</code>.
+			</li>
+		</ol>
+
+		<h3>Migration (new server)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">Copy the database</strong>
+				Import the dump into the new server's database.
+			</li>
+			<li>
+				<strong class="path">Copy <code>wp-content/uploads/fslm_files/</code> (with the key file)</strong>
+				Verify the key arrived:
+				<pre><code>sha256sum wp-content/uploads/fslm_files/encryption_key.php</code></pre>
+				<div class="expect"><strong>Expected:</strong> the hash matches the one recorded on the old server.</div>
+			</li>
+			<li>
+				<strong class="path">Check the dashboard notice</strong>
+				Log in to the new server and open <em>TRADESAFE → Access Manager</em>.
+				<div class="expect"><strong>Expected:</strong> when FSLM is present and the key file is missing, a red
+				"FSLM encryption key missing" notice is shown with the exact expected path. When the key file is
+				present, <strong>no</strong> notice appears.</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/01-dashboard.png" alt="Live staging TRADESAFE Access Manager dashboard" />
+				<figcaption><strong>Live staging — TRADESAFE → Access Manager</strong> — the dashboard as it appears on the
+				staging server. FSLM is not present on staging, so no warning is expected; on the new production server,
+				if FSLM is present but <code>encryption_key.php</code> is missing, a red notice appears above these stats
+				with the exact expected path.</figcaption>
+			</figure>
+			<li>
+				<strong class="path">Smoke-test an existing product key</strong>
+				Open a license/product-key detail page and confirm the stored (encrypted) token still decrypts.
+				<div class="expect"><strong>Expected:</strong> previously sold keys remain readable.</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>Acceptance:</strong> <code>wp-content/uploads/fslm_files/encryption_key.php</code> is copied
+		to the new server with the database, its <code>sha256</code> matches, the dashboard shows no missing-key warning,
+		and an existing product key still decrypts.</div>
+	</section>
+
+	<!-- ============================ CHECKLIST ============================ -->
+	<section>
+		<h2><span class="num">✓</span> Sign-off checklist</h2>
+		<ul class="check">
+			<li>Migrate Accounts preview reports resolvable vs. missing invite codes.</li>
+			<li>After migration, <em>Usage Logs</em> shows Registration/Success rows with the user's invite-code string.</li>
+			<li>After migration, <em>User Lookup</em> shows the user's invite code.</li>
+			<li><code>zdam_migrated_invite_code</code> usermeta holds the exact code per migrated user.</li>
+			<li>Import Codes: paste and file upload both work; preview counts match; codes appear in the Codes list.</li>
+			<li>Export Codes: CSV/TXT export still produces a usable file.</li>
+			<li>Migration day: <code>encryption_key.php</code> copied with the DB; <code>sha256</code> matches on new server.</li>
+			<li>Dashboard shows the "FSLM encryption key missing" notice only when the key is genuinely absent.</li>
+		</ul>
+	</section>
+
+	<footer>
+		TradeSafe Access Manager — verification guide · see <code>docs/MIGRATION.md</code> for the full server runbook.
+	</footer>
+
+	</div><!-- /content-en -->
+
+	<!-- ============================ BENGALI ============================ -->
+	<div id="content-bn" class="hidden">
+
+	<header class="hero">
+		<h1>TradeSafe Access Manager — ক্লায়েন্ট যাচাইয়ের গাইড</h1>
+		<p>প্রতিটি প্রয়োজনীয় কাজের জন্য: <strong>আপনি কী চেয়েছিলেন</strong>, <strong>কীভাবে তৈরি করে ঠিক করা হয়েছে</strong>, আর <strong>ওয়েবসাইটে তা ধাপে ধাপে মিলিয়ে দেখার নিয়ম</strong> — যেন আত্মবিশ্বাসের সাথে চূড়ান্ত অনুমোদন দিতে পারেন।</p>
+		<div class="badges">
+			<span class="badge">প্রয়োজন ১ · অ্যাকাউন্ট মাইগ্রেশনে ইনভাইট কোড সংরক্ষণ</span>
+			<span class="badge">প্রয়োজন ২ · কোড ইমপোর্ট / এক্সপোর্ট</span>
+			<span class="badge">প্রয়োজন ৩ · FSLM এনক্রিপশন চাবি (মাইগ্রেশন দিন)</span>
+		</div>
+	</header>
+
+	<div class="note">
+		<strong>এই গাইডের সব ছবি সক্রিয় পরীক্ষার (staging) পরিবেশ থেকে তোলা</strong> —
+		<code>staging.store.tradesafe.gg</code> (অ্যাডমিন অ্যাকাউন্ট দিয়ে, শুধু দেখার জন্য; কোনো ক্লায়েন্টের ডাটা বদলানো হয়নি)।
+		একমাত্র ব্যতিক্রম হলো ইমপোর্টের <em>সফল</em> বার্তার ছবিটা — সেটা লোকাল ডেমোনস্ট্রেশন, কারণ আসল ইমপোর্ট চালালে পরীক্ষার সাইটের ডাটা বদলে যেত।
+	</div>
+
+	<!-- ============================ প্রয়োজন ১ ============================ -->
+	<section>
+		<h2><span class="num">১</span> অ্যাকাউন্ট মাইগ্রেশন প্রত্যেক ব্যবহারকারীর ইনভাইট কোড রেখে দেয় <span class="blocker">সমস্যা</span></h2>
+		<p class="lede">
+			আগে মাইগ্রেশন শুধু ব্যবহারকারীদের অনুমতি (রোল) দিত, কিন্তু <em>কোন ইনভাইট কোড দিয়ে কে রেজিস্ট্রেশন করেছিল সেটা লেখে রাখত না</em>।
+			সমস্যা হলো — প্রতিটা পুরনো প্রোডাক্ট-কি টোকেন (product key) ওই কোড দিয়েই তালাবন্ধ করা। তাই মাইগ্রেশনেও কোডটা বেঁচে থাকতে হবে।
+			এই বিল্ড প্রত্যেক ব্যবহারকারীর NUA ইনভাইট কোড খুঁজে বের করে প্লাগিনের ডাটায় জমা রাখে।
+		</p>
+
+		<div class="ask">
+			<span class="title">ক্লায়েন্ট কী চেয়েছিলেন</span>
+			<blockquote>
+				<p>"Migrate Accounts-এ ইনভাইট কোড হারিয়ে যায়। এটি শুধু রোল দেয়; কখনো পড়ে না যে ব্যবহারকারী কোন কোড দিয়ে রেজিস্টার করেছে, আর যে অডিট লাইন লেখে তাতে কোড কলাম খালি থাকে। মাইগ্রেশনের পর প্রত্যেক ব্যবহারকারীর আসল কোড স্ট্রিংটা দরকার — সব পুরনো প্রোডাক্ট কি টোকেন ওই কোড দিয়েই এনক্রিপ্ট করা।"</p>
+				<p>"মাইগ্রেশনের সময় ব্যবহারকারীর NUA কোড খুঁজো (usermeta <code>nua_invcode_used</code> → <code>invitation_code</code> পোস্ট টাইটেল) এবং তা <code>zdam_code_logs</code> টেবিলে লিখো, যেন আসল রিডিমশনের মতো দেখায় (কোড ভরা, <code>is_success=1</code>, <code>event_type</code> রেজিস্ট্রেশন, <code>admin_action</code> নয়)। অথবা প্রত্যেক ব্যবহারকারীর জন্য usermeta-তে জমা করো — শুধু বলো শেষ পর্যন্ত কোথায় থাকবে।"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">এই বিল্ডে কীভাবে ঠিক করা হয়েছে</span>
+			<ul>
+				<li><strong>মাইগ্রেশনের সময়</strong> প্লাগিন প্রত্যেক ব্যবহারকারীর NUA ইনভাইট কোড খুঁজে বের করে — usermeta <code>nua_invcode_used</code> থেকে <code>invitation_code</code> পোস্টের টাইটেল পর্যন্ত — এবং তা রেকর্ড করে।</li>
+				<li>যাদের কোড মেলে, তারা Usage Logs-এ <strong>রিডেমশন-ধাঁচের লগ লাইন</strong> পায়:
+				<code>event_type = registration</code>, <code>is_success = 1</code>, <strong>কোড কলাম = আসল ইনভাইট কোড স্ট্রিং</strong>, রোল দেওয়া হয়েছে, নোট "Migrate Accounts"।</li>
+				<li>একই কোড <strong>ব্যবহারকারীর প্রোফাইলেও</strong> জমা হয় <code>zdam_migrated_invite_code</code> usermeta নামে — চাইলে লগ থেকে বা usermeta টেবিল থেকে, যেকোনোটা দিয়ে খুঁজতে পারবে।</li>
+				<li>যাদের কোড <strong>মেলে না</strong>, তাদের জন্য স্বাভাবিক admin-action অডিট লাইন লেখা হয় (কোড কলাম খালি)। <em>Preview</em> বোতাম কিছু গ্রান্ট করার আগেই বলে দেয় কতগুলো অ্যাকাউন্ট কোন দলে পড়বে।</li>
+			</ul>
+		</div>
+
+		<h3>ইনভাইট কোড শেষ পর্যন্ত কোথায় থাকে ("কোথায় জমা হয়" এর উত্তর)</h3>
+		<table>
+			<tr><th>অবস্থান</th><th>কী লেখা হয়</th><th>ক্লায়েন্ট কীভাবে দেখে</th></tr>
+			<tr>
+				<td><code>{prefix}zdam_code_logs</code> — <em>রিডেমশন-ধাঁচের</em> লগ লাইন</td>
+				<td><code>code</code> = ইনভাইট কোড স্ট্রিং, <code>event_type</code> = <code>registration</code>, <code>is_success</code> = 1, <code>roles_granted</code> = দেওয়া রোল, অ্যাডমিন + টার্গেট ইউজার ফিল্ড, নোট "Migrate Accounts"</td>
+				<td>Usage Logs তালিকা · User Lookup ডিটেইল</td>
+			</tr>
+			<tr>
+				<td>Usermeta <code>zdam_migrated_invite_code</code> (প্রত্যেক ব্যবহারকারীর জন্য)</td>
+				<td>রেজিস্ট্রেশনে ব্যবহৃত আসল ইনভাইট কোড স্ট্রিং</td>
+				<td>User Lookup ডিটেইল · SQL <code>SELECT user_id, meta_value FROM {prefix}usermeta WHERE meta_key='zdam_migrated_invite_code'</code></td>
+			</tr>
+		</table>
+		<div class="note">
+			যাদের ইনভাইট কোড মেলে না, তাদের জন্য স্বাভাবিক admin-audit লাইন থাকে (কোড কলাম খালি)।
+			Preview আগেই বলে দেয় কতগুলো অ্যাকাউন্ট কোন দলে পড়বে।
+		</div>
+
+		<h3>ধাপে ধাপে যাচাই</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">রেফারেন্স অ্যাকাউন্ট প্রস্তুত করো</strong>
+				টেস্ট সাইটের এমন একজন ব্যবহারকারী বেছে নাও যিনি New User Approve-এর ইনভাইট কোড দিয়ে রেজিস্টার করেছেন
+				(যেমন NUA → Invitation Codes-এ যাকে "registered" দেখায়)। তার ইমেইল আর ব্যবহার করা কোড স্ট্রিংটা লিখে রাখো।
+			</li>
+			<li>
+				<strong class="path"><em>TRADESAFE → Migrate Accounts</em> খোলো</strong>
+				ইন্ট্রো যেন বলে যে ইনভাইট কোড খোঁজা ও রেকর্ড করা হয়, আর পেজে স্কোপ অপশন থাকে
+				(যেমন "যারা New User Approve ইনভাইট কোড ব্যবহার করেছে")।
+			</li>
+			<li>
+				<strong class="path"><em>Preview</em> চাপো</strong>
+				<div class="expect"><strong>প্রত্যাশা:</strong> ভ্যালিডেশন টেবিলে দুটো নতুন লাইন দেখাবে — <em>কোড মেলে এমন অ্যাকাউন্ট</em> এর সংখ্যা আর <em>কোড মেলে না এমন অ্যাকাউন্ট (শুধু admin-action অডিট)</em> এর সংখ্যা। দুটোর যোগফল মোট ম্যাচ করা অ্যাকাউন্টের সমান হবে।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/02-migrate-preview.png" alt="সক্রিয় staging-এ Migrate Accounts প্রিভিউ: ১,০১৮ ম্যাচ করা অ্যাকাউন্ট, সবগুলোর NUA ইনভাইট কোড মেলে" />
+				<figcaption><strong>সক্রিয় staging — Migrate Accounts → Preview</strong>. ভ্যালিডেশন টেবিল রিপোর্ট করে <strong>মোট ম্যাচ করা অ্যাকাউন্ট ১,০১৮</strong>, <strong>কোড মেলে এমন NUA ইনভাইট অ্যাকাউন্ট ১,০১৮</strong>, <strong>কোড মেলে না এমন ০</strong>। রোলের ভাগ (আগে থেকেই আছে / নতুন দেওয়া হবে) আর নমুনা ম্যাচ করা অ্যাকাউন্ট নিচে দেখা যায়।</figcaption>
+			</figure>
+			<li>
+				<strong class="path">মাইগ্রেশন চালাও</strong>
+				কমপক্ষে একটা অ্যাক্সেস রোল আর তোমার স্কোপ বেছে কনফার্ম করো। সফল নোটিশের অপেক্ষা করো।
+				<div class="expect"><strong>প্রত্যাশা:</strong> কতগুলো নতুন গ্রান্ট দেওয়া হলো, তা বলে সফল বার্তা আসবে।</div>
+			</li>
+			<li>
+				<strong class="path"><em>TRADESAFE → Usage Logs</em> চেক করো</strong>
+				রেফারেন্স ব্যবহারকারীর ইমেইলে ফিল্টার করো। এই ব্যবহারকারীর লাইনটা খুঁজে বের করো।
+				<div class="expect"><strong>প্রত্যাশা:</strong> ইভেন্ট = <strong>রেজিস্ট্রেশন</strong>, ফলাফল = <strong>সফল</strong>, আর <strong>কোড কলামে ওই ব্যবহারকারীর আসল ইনভাইট কোড স্ট্রিং</strong> দেখা যাবে (খালি নয়, প্লাগিন-জেনারেটেড কোডও নয়)।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/05-usage-logs.png" alt="সক্রিয় staging-এ Usage Logs, ফিক্সের আগের মাইগ্রেশন লাইনগুলো দেখাচ্ছে" />
+				<figcaption><strong>সক্রিয় staging — Usage Logs</strong>. যেসব লাইন দেখা যাচ্ছে (আগস্ট ৮, <code>ADMIN-ACTION</code>, কোড খালি) সেগুলো মাইগ্রেশন <em>এই ফিক্সের আগে</em> লিখেছিল — ঠিক সেই ঘাটতিটাই ফিক্স পূরণ করে। নতুন মাইগ্রেশন চালানোর পর, মেলে এমন ইনভাইট কোডগুলো <strong>রেজিস্ট্রেশন / সফল</strong> লাইন হিসেবে <strong>কোড কলাম ভরা অবস্থায়</strong> আসবে।</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>TRADESAFE → User Lookup</em> চেক করো</strong>
+				রেফারেন্স ব্যবহারকারীর ইমেইল খুঁজো।
+				<div class="expect"><strong>প্রত্যাশা:</strong> ইউজার ডিটেইলে মেলে এমন ইনভাইট কোড দেখা যাবে (আর একই রেজিস্ট্রেশন/সফল ইভেন্ট)।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/06-user-lookup.png" alt="সক্রিয় staging-এ User Lookup, ফিক্সের আগে মাইগ্রেট করা একজন ব্যবহারকারীর জন্য" />
+				<figcaption><strong>সক্রিয় staging — User Lookup</strong>. ফিক্সের আগে মাইগ্রেট করা একজন ব্যবহারকারীকে খুঁজলে <em>Codes Used: No codes used</em> দেখায় — ঠিক এই ঘাটতিটাই ফিক্স পূরণ করে। নতুন মাইগ্রেশন আবার চালানোর পর, এই ব্যবহারকারীর ইনভাইট কোড এখানে আর Usage Logs-এ রেজিস্ট্রেশন/সফল লাইন হিসেবে দেখা যাবে।</figcaption>
+			</figure>
+			<li>
+				<strong class="path">(শুধু অ্যাডমিন) প্রত্যেক ব্যবহারকারীর usermeta কনফার্ম করো</strong>
+				<pre><code><span class="c">-- {prefix} তোমার টেবিল প্রিফিক্স দিয়ে বদলাও (ডিফল্ট wp_)</span>
+SELECT user_id, meta_value
+FROM   {prefix}usermeta
+WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
+				<div class="expect"><strong>প্রত্যাশা:</strong> প্রত্যেক মাইগ্রেটেড NUA ব্যবহারকারীর জন্য এক লাইন, যার <code>meta_value</code> = তাদের আসল ইনভাইট কোড স্ট্রিং।</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>গৃহীত হবে যখন:</strong> মাইগ্রেশনের পর প্রত্যেক ব্যবহারকারীর আসল ইনভাইট কোড বের করা যায় —
+		<code>zdam_code_logs</code>-এ (Usage Logs / User Lookup) আর <code>zdam_migrated_invite_code</code> usermeta-তে। যাদের ইনভাইট কোড ছিল, তাদের কোড কলাম কখনো খালি নয়।</div>
+	</section>
+
+	<!-- ============================ প্রয়োজন ২ ============================ -->
+	<section>
+		<h2><span class="num">২</span> কোড ইমপোর্ট ও এক্সপোর্ট</h2>
+		<p class="lede">
+			ইনভাইট কোড এখন প্লাগিনে <strong>ইমপোর্ট</strong> করা যায় (পেস্ট করে বা ফাইল আপলোড করে) — যাতে সার্ভার-ইনফ্রাস্ট্রাকচার
+			ডাটাবেসে তৈরি কোডগুলো ইউজার অ্যাকাউন্টে বাঁধা যায়। আগের <strong>এক্সপোর্ট</strong> (CSV/TXT) উল্টো দিকের জন্য আগের মতোই আছে।
+		</p>
+
+		<div class="ask">
+			<span class="title">ক্লায়েন্ট কী চেয়েছিলেন</span>
+			<blockquote>
+				<p>"ইনভাইট কোড এখন প্লাগিনের ভিতরেই বানানো যায়, ইমপোর্টের উপায় নেই। আমাদের তৈরি কোড ইমপোর্ট করতে হবে (সেটা হবে ভিন্ন একটা ডাটাবেস থেকে, যে সার্ভার ইনফ্রা চালায়), অথবা প্লাগিনে বানানো কোড এক্সপোর্ট করতে হবে যাতে আমাদের সিস্টেমে ঢোকানো যায়। কারণ কোডগুলো ইউজার অ্যাকাউন্টে বাঁধতে হবে।"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">এই বিল্ডে কীভাবে ঠিক করা হয়েছে</span>
+			<ul>
+				<li>TRADESAFE মেনুতে নতুন <strong>"Import Codes" পেজ</strong>: প্রতি লাইনে একটা করে কোড পেস্ট করো, অথবা TXT / CSV / JSON ফাইল আপলোড করো। CSV ফাইলে শিরোনাম লাইন থাকতে পারে (<code>code, code_type, group, batch_name, max_uses, expiration_date, status, notes</code>, …) এবং প্রতি লাইনের মান ফর্মের ডিফল্টের চেয়ে প্রাধান্য পায়।</li>
+				<li>ইমপোর্টের <strong>আগে প্রিভিউ</strong>: পেজ মোট লাইন, ইমপোর্টের জন্য প্রস্তুত বৈধ কোড, আর বাদ পড়া (ডুপ্লিকেট / ভুল) কোড — কারণসহ — গণনা করে। <em>Import Codes</em> চাপার আগ পর্যন্ত কিছুই লেখা হয় না।</li>
+				<li>ইমপোর্ট করা কোড সাধারণ <strong>Codes</strong> তালিকায় ব্যাচের নামসহ আসে, আর প্লাগিনে বানানো কোডের মতোই কাজ করে (বাঁধা যায়, রিডিম হয়, এক্সপোর্ট হয়)।</li>
+				<li><strong>Export</strong> (CSV / TXT) আগে থেকেই আছে এবং অপরিবর্তিত — এখন কোড দুদিকেই চলাচল করে।</li>
+			</ul>
+		</div>
+
+		<h3>অংশ ক — কোড ইমপোর্ট</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path"><em>TRADESAFE → Import Codes</em> খোলো</strong>
+				TRADESAFE মেনুর নিচে নতুন সাবমেনু পেজ। না দেখলে অ্যাডমিন মেনু রিফ্রেশ করো।
+			</li>
+			<li>
+				<strong class="path">কোড পেস্ট করো — প্রতি লাইনে একটা</strong>
+				"Paste codes" বেছে কয়েকটা টেস্ট কোড পেস্ট করো, যেমন:
+				<pre><code>TSG-7F3K9Q
+TSG-2M8X5B
+TSG-9W4R6T</code></pre>
+			</li>
+			<li>
+				<strong class="path">অথবা ফাইল আপলোড করো</strong>
+				"Upload a file" বেছে একটি <code>.txt</code> / <code>.csv</code> ফাইল নাও। ফাইলের কনটেন্ট নিজে নিজেই টেক্সট এরিয়ায় ঢুকে যায়। CSV ফাইলে শিরোনাম লাইন থাকতে পারে, যেমন:
+				<pre><code>code,code_type,max_uses,expiration_date,notes
+TSG-7F3K9Q,access,1,2026-12-31,batch from infra DB
+TSG-2M8X5B,access,unlimited,never,</code></pre>
+				<div class="note">চেনা CSV কলাম: <code>code, code_type, group, batch_name, default_account_role, roles_granted, max_uses, used_count, expiration_date, status, redirect_url, notes</code>। প্রতি লাইনের মান ফর্মের ডিফল্টের চেয়ে প্রাধান্য পায়।</div>
+			</li>
+			<li>
+				<strong class="path">ফর্মের ডিফল্ট সেট করো</strong>
+				Code Type, Group, আর একটা Batch Name বেছে নাও (যেমন <code>imported-june-batch</code>)। Max Uses আর Expiration Generate Codes-এর মতোই কাজ করে।
+			</li>
+			<li>
+				<strong class="path"><em>Preview Import</em> চাপো</strong>
+				<div class="expect"><strong>প্রত্যাশা:</strong> প্রিভিউ প্যানেলে <em>Total rows detected</em>, <em>Valid codes (ready to import)</em>, আর <em>Skipped</em> সংখ্যা দেখাবে। ডুপ্লিকেট, খালি লাইন, আর ভুল মান কারণসহ তালিকাভুক্ত ও বাদ যাবে।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/03-import-preview.png" alt="সক্রিয় staging-এ Import Codes প্রিভিউ: ৩ লাইন ধরা পড়েছে, ৩টাই বৈধ, ০ বাদ" />
+				<figcaption><strong>সক্রিয় staging — Import Codes → Preview</strong>. শিরোনাম লাইনসহ পেস্ট করা CSV বিশ্লেষণ করা হয়: <strong>মোট ধরা পড়া লাইন ৩</strong>, <strong>বৈধ কোড (ইমপোর্টের জন্য প্রস্তুত) ৩</strong>, <strong>বাদ ০</strong>। প্রতি লাইনের মান (এখানে <code>code_type=access</code>) CSV কলাম থেকে পড়া হয়।</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>Import Codes</em> চাপো</strong>
+				<div class="expect"><strong>প্রত্যাশা:</strong> "<em>N code(s) imported successfully</em>" সফল বার্তা আসবে।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/04-import-success.png" alt="ইমপোর্ট সফল ব্যানার (লোকাল ডেমোনস্ট্রেশন)" />
+				<figcaption><strong>Import → সফল (লোকাল ডেমোনস্ট্রেশন).</strong> আসল ইমপোর্ট staging সার্ভারে <em>চালানো হয় না</em>, যেন ক্লায়েন্টের ডাটা অক্ষত থাকে। সবুজ ব্যানারে <em>N code(s) imported successfully</em> রিপোর্ট হয়।</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>TRADESAFE → Codes</em>-এ যাচাই করো</strong>
+				ব্যাচের নাম বা ইমপোর্ট করা কোনো একটা কোড খুঁজো।
+				<div class="expect"><strong>প্রত্যাশা:</strong> ইমপোর্ট করা কোড status <strong>Unused</strong>, সঠিক কোড টাইপ, গ্রুপ, আর তোমার দেওয়া ব্যাচের নামসহ দেখা যাবে। এখন এগুলো সাধারণ কোডের মতো বাঁধা / রিডিম করা যায়।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/07-codes-list.png" alt="সক্রিয় staging-এ Codes তালিকা, বর্তমান ইনভাইট কোডসহ" />
+				<figcaption><strong>সক্রিয় staging — TRADESAFE → Codes</strong>. বর্তমান তালিকা (<em>মোট ১২ কোডের মধ্যে ১ থেকে ১২ দেখানো হচ্ছে</em>) আসল রেজিস্ট্রেশন ইনভাইট কোডগুলো দেখায়। একবার ইমপোর্ট চালালে, ইমপোর্ট করা ব্যাচটা এখানে status <strong>Unused</strong> নিয়ে আসবে, প্লাগিনে বানানো কোডের মতোই বাঁধা যাবে।</figcaption>
+			</figure>
+		</ol>
+
+		<h3>অংশ খ — কোড এক্সপোর্ট (আগের ফিচার)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path"><em>TRADESAFE → Codes</em> খোলো</strong>
+				ফিল্টার (status, type, batch) লাগাও বা লাইন সিলেক্ট করো।
+			</li>
+			<li>
+				<strong class="path"><em>Export CSV</em> বা <em>Export TXT</em> চাপো</strong>
+				<div class="expect"><strong>প্রত্যাশা:</strong> বর্তমান ফিল্টার করা কোডসহ একটা ফাইল নামবে (type, group, batch, max_uses, status সহ)। এই ফাইলটাই তোমার সার্ভার-ইনফ্রাস্ট্রাকচার ডাটাবেসে ইমপোর্ট করতে পারবে।</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>গৃহীত হবে যখন:</strong> বাইরে বানানো কোড ইমপোর্ট করা যায় (পেস্ট বা ফাইল, প্রিভিউসহ) আর প্লাগিনে বানানো কোড এক্সপোর্ট করা যায় (CSV/TXT) — কোড দুদিকেই চলাচল করে।</div>
+	</section>
+
+	<!-- ============================ প্রয়োজন ৩ ============================ -->
+	<section>
+		<h2><span class="num">৩</span> FSLM এনক্রিপশন চাবি — মাইগ্রেশনের দিন (সার্ভার)</h2>
+		<p class="lede">
+			এটা <strong>সার্ভার-সাইড</strong> কাজ, প্লাগিনের ফিচার নয়। লাইসেন্স ম্যানেজারের এনক্রিপশন চাবি একটা <strong>ফাইলে</strong> থাকে,
+			ডাটাবেজে নয়। নতুন সার্ভারে ডাটাবেজের সাথে এটাও কপি করতে হবে; নইলে আগে বিক্রি হওয়া প্রতিটা প্রোডাক্ট কি পড়া যাবে না।
+		</p>
+
+		<div class="ask">
+			<span class="title">ক্লায়েন্ট কী চেয়েছিলেন</span>
+			<blockquote>
+				<p>"মাইগ্রেশনের দিনের জন্য (সার্ভার, প্লাগিন নয়): <code>wp-content/uploads/fslm_files/encryption_key.php</code> অবশ্যই ডাটাবেজের সাথে নতুন সার্ভারে কপি করতে হবে। লাইসেন্স ম্যানেজারের এনক্রিপশন চাবি এই ফাইলে থাকে, ডাটাবেজে নয় — এটা না থাকলে আগে বিক্রি হওয়া প্রতিটা কি পড়া যাবে না।"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">এই বিল্ডে কীভাবে সামলানো হয়</span>
+			<ul>
+				<li>এটা <strong>প্লাগিন নিজে কপি করে দিতে পারে না</strong> — চাবি ফাইলটা প্লাগিনের বাইরে থাকে। তাই সমাধান হলো ডকুমেন্টেশন + একটা সেফটি ওয়ার্নিং।</li>
+				<li><strong>মাইগ্রেশন-দিনের রানবুক</strong>: <code>docs/MIGRATION.md</code> আর নিচের ধাপগুলোতে পুরনো সার্ভার → নতুন সার্ভারে ঠিক কীভাবে কপি আর <code>sha256</code> মিলিয়ে দেখার কমান্ড আছে।</li>
+				<li><strong>ড্যাশবোর্ড সেফটি নেট</strong>: সার্ভারে FSLM ইনস্টল থাকলে কিন্তু চাবি ফাইলটা না থাকলে, TRADESAFE ড্যাশবোর্ডে লাল <em>"FSLM encryption key missing"</em> নোটিশ দেখায় — সঠিক প্রত্যাশিত পাথসহ — যেন কাস্টমার আক্রান্ত হওয়ার আগেই সমস্যাটা চোখে পড়ে।</li>
+			</ul>
+		</div>
+
+		<div class="alert">
+			<strong>অতি গুরুত্বপূর্ণ ফাইল:</strong>
+			<code>wp-content/uploads/fslm_files/encryption_key.php</code>
+			— নতুন সার্ভারে এটা না থাকলে আগে বিক্রি হওয়া কি ডিক্রিপ্ট করা যাবে না।
+		</div>
+
+		<h3>মাইগ্রেশনের আগে (পুরনো সার্ভার)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">চাবি ফাইলটা আছে কিনা নিশ্চিত হও</strong>
+				<pre><code>ls -la wp-content/uploads/fslm_files/encryption_key.php
+sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># এই হ্যাশটা লিখে রাখো</span></code></pre>
+				<div class="expect"><strong>প্রত্যাশা:</strong> ফাইলটা আছে আর পড়া যায়। <code>sha256</code> হ্যাশটা লিখে রাখো — নতুন সার্ভারে মিলিয়ে দেখবে।</div>
+			</li>
+			<li>
+				<strong class="path">সব ব্যাকআপ নাও</strong>
+				পুরো ফাইল কপি + পুরো ডাটাবেজ ডাম্প। চাবি ফাইলটা যেন <code>wp-content/uploads/fslm_files/</code> কপির ভিতরে থাকে।
+			</li>
+		</ol>
+
+		<h3>মাইগ্রেশন (নতুন সার্ভার)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">ডাটাবেজ কপি করো</strong>
+				ডাম্পটা নতুন সার্ভারের ডাটাবেজে ইমপোর্ট করো।
+			</li>
+			<li>
+				<strong class="path"><code>wp-content/uploads/fslm_files/</code> (চাবি ফাইলসহ) কপি করো</strong>
+				চাবি এসেছে কিনা দেখো:
+				<pre><code>sha256sum wp-content/uploads/fslm_files/encryption_key.php</code></pre>
+				<div class="expect"><strong>প্রত্যাশা:</strong> হ্যাশটা পুরনো সার্ভারে লেখা হ্যাশের সাথে মিলবে।</div>
+			</li>
+			<li>
+				<strong class="path">ড্যাশবোর্ড নোটিশ চেক করো</strong>
+				নতুন সার্ভারে লগ ইন করে <em>TRADESAFE → Access Manager</em> খোলো।
+				<div class="expect"><strong>প্রত্যাশা:</strong> FSLM থাকলে আর চাবি ফাইল না থাকলে, লাল "FSLM encryption key missing" নোটিশ সঠিক প্রত্যাশিত পাথসহ দেখাবে। চাবি ফাইল থাকলে <strong>কোনো</strong> নোটিশ আসবে না।</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/01-dashboard.png" alt="সক্রিয় staging-এ TRADESAFE Access Manager ড্যাশবোর্ড" />
+				<figcaption><strong>সক্রিয় staging — TRADESAFE → Access Manager</strong> — staging সার্ভারে ড্যাশবোর্ড যেমন দেখায়। staging-এ FSLM নেই, তাই কোনো সতর্কবার্তা প্রত্যাশা করা হয় না; নতুন প্রোডাকশন সার্ভারে FSLM থাকলে কিন্তু <code>encryption_key.php</code> না থাকলে, এই পরিসংখ্যানের উপরে সঠিক প্রত্যাশিত পাথসহ লাল নোটিশ আসবে।</figcaption>
+			</figure>
+			<li>
+				<strong class="path">আগের প্রোডাক্ট কি দিয়ে স্মোক-টেস্ট করো</strong>
+				লাইসেন্স/প্রোডাক্ট-কি ডিটেইল পেজ খুলে নিশ্চিত হও যেন জমা (এনক্রিপ্টেড) টোকেনটা এখনো ডিক্রিপ্ট হয়।
+				<div class="expect"><strong>প্রত্যাশা:</strong> আগে বিক্রি হওয়া কি এখনো পড়া যায়।</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>গৃহীত হবে যখন:</strong> <code>wp-content/uploads/fslm_files/encryption_key.php</code> ডাটাবেজের সাথে নতুন সার্ভারে কপি হয়েছে, তার <code>sha256</code> মিলেছে, ড্যাশবোর্ডে চাবি-নেই এমন সতর্কবার্তা নেই, আর আগের প্রোডাক্ট কি এখনো ডিক্রিপ্ট হয়।</div>
+	</section>
+
+	<!-- ============================ চেকলিস্ট ============================ -->
+	<section>
+		<h2><span class="num">✓</span> চূড়ান্ত অনুমোদনের চেকলিস্ট</h2>
+		<ul class="check">
+			<li>Migrate Accounts-এর প্রিভিউ মেলে এমন বনাম মেলে না এমন ইনভাইট কোড রিপোর্ট করে।</li>
+			<li>মাইগ্রেশনের পর <em>Usage Logs</em> রেজিস্ট্রেশন/সফল লাইন দেখায়, ব্যবহারকারীর ইনভাইট কোড স্ট্রিংসহ।</li>
+			<li>মাইগ্রেশনের পর <em>User Lookup</em> ব্যবহারকারীর ইনভাইট কোড দেখায়।</li>
+			<li><code>zdam_migrated_invite_code</code> usermeta-তে প্রত্যেক মাইগ্রেটেড ব্যবহারকারীর আসল কোড থাকে।</li>
+			<li>Import Codes: পেস্ট আর ফাইল আপলোড দুটোই কাজ করে; প্রিভিউ সংখ্যা মেলে; কোড Codes তালিকায় আসে।</li>
+			<li>Export Codes: CSV/TXT এক্সপোর্ট এখনো কাজের ফাইল বানায়।</li>
+			<li>মাইগ্রেশন দিন: <code>encryption_key.php</code> ডাটাবেজের সাথে কপি হয়েছে; নতুন সার্ভারে <code>sha256</code> মিলেছে।</li>
+			<li>ড্যাশবোর্ড "FSLM encryption key missing" নোটিশ শুধু তখনই দেখায় যখন চাবি সত্যিই অনুপস্থিত।</li>
+		</ul>
+	</section>
+
+	<footer>
+		TradeSafe Access Manager — যাচাইয়ের গাইড · পুরো সার্ভার রানবুকের জন্য দেখো <code>docs/MIGRATION.md</code>।
+	</footer>
+
+	</div><!-- /content-bn -->
+
+	<!-- ============================ URDU ============================ -->
+	<div id="content-ur" class="hidden rtl" lang="ur" dir="rtl">
+
+	<header class="hero">
+		<h1>TradeSafe Access Manager — کلائنٹ تصدیقی گائیڈ</h1>
+		<p>تینوں ضروریات کے لیے: <strong>آپ نے کیا مانگا تھا</strong>، <strong>اس اپ ڈیٹ نے کیسے حل کیا</strong>، اور <strong>سائٹ پر تصدیق کرنے کے قدم بہ قدم طریقے</strong> — تاکہ آپ اعتماد کے ساتھ حتمی منظوری دے سکیں۔</p>
+		<div class="badges">
+			<span class="badge">ضرورت ۱ · اکاؤنٹ مائیگریشن میں دعوتی کوڈ محفوظ</span>
+			<span class="badge">ضرورت ۲ · کوڈ امپورٹ / ایکسپورٹ</span>
+			<span class="badge">ضرورت ۳ · FSLM انکرپشن کلید (مائیگریشن کا دن)</span>
+		</div>
+	</header>
+
+	<div class="note">
+		<strong>اس گائیڈ کی تمام تصاویر لائیو ٹیسٹنگ (staging) ماحول سے لی گئی ہیں</strong> —
+		<code>staging.store.tradesafe.gg</code> (ایڈمن اکاؤنٹ سے، صرف دیکھنے کے لیے؛ کسی کلائنٹ کا ڈیٹا نہیں بدلا گیا)۔
+		صرف ایک استثنا ہے — امپورٹ کی <em>کامیابی</em> کا پیغام، جو لوکل ڈیمو ہے کیونکہ اصلی امپورٹ چلانے سے ٹیسٹنگ سائٹ کا ڈیٹا بدل جاتا۔
+	</div>
+
+	<!-- ============================ ضرورت ۱ ============================ -->
+	<section>
+		<h2><span class="num">۱</span> اکاؤنٹ مائیگریشن ہر صارف کا دعوتی کوڈ محفوظ رکھتا ہے <span class="blocker">مسئلہ</span></h2>
+		<p class="lede">
+			پہلے مائیگریشن صرف صارفین کو اجازت (رول) دیتا تھا، لیکن کبھی نہیں لکھتا تھا کہ صارف نے <em>کس دعوتی کوڈ سے رجسٹریشن کی</em>۔
+			مسئلہ یہ ہے کہ ہر پرانا پروڈکٹ کلید ٹوکن اسی کوڈ سے مقفل (انکرپٹ) ہوتا ہے۔ اس لیے مائیگریشن میں بھی یہ کوڈ محفوظ رہنا ضروری ہے۔
+			اس اپ ڈیٹ میں ہر صارف کا NUA دعوتی کوڈ ڈھونڈ کر پلگ ان کے ڈیٹا میں محفوظ کیا جاتا ہے۔
+		</p>
+
+		<div class="ask">
+			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
+			<blockquote>
+				<p>"Migrate Accounts دعوتی کوڈ کھو دیتا ہے۔ یہ صرف رول دیتا ہے؛ کبھی نہیں پڑھتا کہ صارف نے کس کوڈ سے رجسٹر کیا، اور جو آڈٹ ریکارڈ لکھتا ہے اس میں کوڈ کا خانہ خالی ہوتا ہے۔ مائیگریشن کے بعد ہر صارف کا اصلی کوڈ درکار ہے — تمام پرانے پروڈکٹ کلید ٹوکنز اسی سے انکرپٹ ہیں۔"</p>
+				<p>"مائیگریشن کے دوران صارف کا NUA کوڈ ڈھونڈیں (usermeta <code>nua_invcode_used</code> → <code>invitation_code</code> پوسٹ ٹائٹل) اور اسے <code>zdam_code_logs</code> ٹیبل میں لکھیں، بالکل اصلی ریڈمپشن کی طرح (کوڈ بھرا ہوا، <code>is_success=1</code>، <code>event_type</code> رجسٹریشن، <code>admin_action</code> نہیں)۔ یا ہر صارف کے لیے usermeta میں محفوظ کریں — بس بتائیں کہ آخر کہاں جائے گا۔"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">اس اپ ڈیٹ میں کیسے حل کیا گیا</span>
+			<ul>
+				<li><strong>مائیگریشن کے دوران</strong> پلگ ان ہر صارف کا NUA دعوتی کوڈ ڈھونڈتا ہے — usermeta <code>nua_invcode_used</code> سے <code>invitation_code</code> پوسٹ کے ٹائٹل تک — اور اسے ریکارڈ کرتا ہے۔</li>
+				<li>جن کے کوڈ مل جاتے ہیں، ان کے لیے Usage Logs میں <strong>ریڈمپشن طرز کا ریکارڈ</strong> بنتا ہے: <code>event_type = registration</code>، <code>is_success = 1</code>، <strong>کوڈ کا خانہ = اصلی دعوتی کوڈ</strong>، دیے گئے رولز، نوٹ "Migrate Accounts"۔</li>
+				<li>یہی کوڈ <strong>صارف کی پروفائل پر بھی</strong> <code>zdam_migrated_invite_code</code> usermeta کے نام سے محفوظ ہوتا ہے — چاہیں تو لاگز سے یا usermeta ٹیبل سے، دونوں میں سے کسی سے بھی ڈھونڈ سکتے ہیں۔</li>
+				<li>جن کے کوڈ <strong>نہیں ملتے</strong>، ان کے لیے عام admin-action آڈٹ ریکارڈ بنتا ہے (کوڈ کا خانہ خالی)۔ <em>Preview</em> بٹن کچھ دینے سے پہلے ہی بتا دیتا ہے کہ کتنے اکاؤنٹس کس زمرے میں آئیں گے۔</li>
+			</ul>
+		</div>
+
+		<h3>دعوتی کوڈ آخر کہاں جاتا ہے ("کہاں محفوظ ہوتا ہے" کا جواب)</h3>
+		<table>
+			<tr><th>مقام</th><th>کیا لکھا جاتا ہے</th><th>کلائنٹ کیسے دیکھتا ہے</th></tr>
+			<tr>
+				<td><code>{prefix}zdam_code_logs</code> — <em>ریڈمپشن طرز کا</em> ریکارڈ</td>
+				<td><code>code</code> = دعوتی کوڈ، <code>event_type</code> = <code>registration</code>، <code>is_success</code> = 1، <code>roles_granted</code> = دیے گئے رولز، ایڈمن + صارف کے خانے، نوٹ "Migrate Accounts"</td>
+				<td>Usage Logs فہرست · User Lookup تفصیل</td>
+			</tr>
+			<tr>
+				<td>usermeta <code>zdam_migrated_invite_code</code> (ہر صارف کے لیے)</td>
+				<td>رجسٹریشن میں استعمال ہونے والا اصلی دعوتی کوڈ</td>
+				<td>User Lookup تفصیل · SQL <code>SELECT user_id, meta_value FROM {prefix}usermeta WHERE meta_key='zdam_migrated_invite_code'</code></td>
+			</tr>
+		</table>
+		<div class="note">
+			جن کا دعوتی کوڈ نہیں ملتا، ان کے لیے عام admin-audit ریکارڈ رہتا ہے (کوڈ کا خانہ خالی)۔
+			Preview پہلے ہی بتا دیتا ہے کہ کتنے اکاؤنٹس کس زمرے میں ہیں۔
+		</div>
+
+		<h3>قدم بہ قدم تصدیق</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">حوالہ اکاؤنٹ تیار کریں</strong>
+				ٹیسٹ سائٹ پر ایسا صارف چنیں جس نے New User Approve کے دعوتی کوڈ سے رجسٹر کیا ہو (جیسے NUA → Invitation Codes میں جسے "registered" دکھایا گیا ہے)۔ اس کا ای میل اور استعمال شدہ کوڈ لکھ لیں۔
+			</li>
+			<li>
+				<strong class="path"><em>TRADESAFE → Migrate Accounts</em> کھولیں</strong>
+				تصدیق کریں کہ انٹرو یہ بتائے کہ دعوتی کوڈ ڈھونڈ کر ریکارڈ کیا جاتا ہے، اور پیج پر scope کے اختیارات موجود ہیں (جیسے "جنہوں نے New User Approve دعوتی کوڈ استعمال کیا")۔
+			</li>
+			<li>
+				<strong class="path"><em>Preview</em> دبائیں</strong>
+				<div class="expect"><strong>توقع:</strong> تصدیقی جدول میں دو نئی قطاریں — <em>جن کے NUA دعوتی کوڈ ملے</em> کی تعداد اور <em>جن کے دعوتی کوڈ نہیں ملے (صرف admin-action آڈٹ)</em> کی تعداد۔ دونوں کا مجموعہ کل مماثل اکاؤنٹس کے برابر ہوگا۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/02-migrate-preview.png" alt="لائیو staging میں Migrate Accounts پیش نظارہ: ۱,۰۱۸ مماثل اکاؤنٹس، سب کے NUA دعوتی کوڈ ملے" />
+				<figcaption><strong>لائیو staging — Migrate Accounts → Preview</strong>. تصدیقی جدول بتاتا ہے <strong>کل مماثل اکاؤنٹس ۱,۰۱۸</strong>، <strong>جن کے NUA دعوتی کوڈ ملے ۱,۰۱۸</strong>، <strong>جن کے کوڈ نہیں ملے ۰</strong>۔ رولز کی تقسیم (پہلے سے موجود / نئے دیے جائیں گے) اور نمونہ مماثل اکاؤنٹس نیچے نظر آتے ہیں۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path">مائیگریشن چلائیں</strong>
+				کم از کم ایک رسائی رول اور اپنا scope منتخب کر کے تصدیق کریں۔ کامیابی کے پیغام کا انتظار کریں۔
+				<div class="expect"><strong>توقع:</strong> کتنے نئے گرانٹ دیے گئے، یہ بتانے والا کامیابی کا پیغام آئے گا۔</div>
+			</li>
+			<li>
+				<strong class="path"><em>TRADESAFE → Usage Logs</em> چیک کریں</strong>
+				حوالہ صارف کے ای میل سے فلٹر کریں۔ اس صارف کی قطار ڈھونڈیں۔
+				<div class="expect"><strong>توقع:</strong> ایونٹ = <strong>رجسٹریشن</strong>، نتیجہ = <strong>کامیاب</strong>، اور <strong>کوڈ کے خانے میں صارف کا اصلی دعوتی کوڈ</strong> نظر آئے (خالی نہیں، پلگ ان کا بنایا ہوا کوڈ بھی نہیں)۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/05-usage-logs.png" alt="لائیو staging میں Usage Logs، فکس سے پہلے کی مائیگریشن قطاریں دکھا رہا ہے" />
+				<figcaption><strong>لائیو staging — Usage Logs</strong>. جو قطاریں نظر آ رہی ہیں (اگست ۸، <code>ADMIN-ACTION</code>، کوڈ خالی) وہ مائیگریشن نے <em>اس فکس سے پہلے</em> لکھیں تھیں — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ مائیگریشن چلانے کے بعد، ملنے والے دعوتی کوڈز <strong>رجسٹریشن / کامیاب</strong> قطاروں میں <strong>کوڈ کا خانہ بھرا ہوا</strong> نظر آئیں گے۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>TRADESAFE → User Lookup</em> چیک کریں</strong>
+				حوالہ صارف کا ای میل تلاش کریں۔
+				<div class="expect"><strong>توقع:</strong> صارف کی تفصیل میں ملنے والا دعوتی کوڈ نظر آئے (اور وہی رجسٹریشن/کامیاب ایونٹ)۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/06-user-lookup.png" alt="لائیو staging میں User Lookup، فکس سے پہلے مائیگریٹ شدہ صارف کے لیے" />
+				<figcaption><strong>لائیو staging — User Lookup</strong>. فکس سے پہلے مائیگریٹ شدہ صارف کو ڈھونڈنے پر <em>Codes Used: No codes used</em> نظر آتا ہے — بالکل یہی کمی فکس پوری کرتا ہے۔ اپڈیٹ شدہ مائیگریشن دوبارہ چلانے کے بعد، اس صارف کا دعوتی کوڈ یہاں اور Usage Logs میں رجسٹریشن/کامیاب قطار کے طور پر نظر آئے گا۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path">(صرف ایڈمن) ہر صارف کا usermeta تصدیق کریں</strong>
+				<pre><code><span class="c">-- {prefix} کو اپنے ٹیبل پرِفکس سے بدلیں (ڈیفالٹ wp_)</span>
+SELECT user_id, meta_value
+FROM   {prefix}usermeta
+WHERE  meta_key = 'zdam_migrated_invite_code';</code></pre>
+				<div class="expect"><strong>توقع:</strong> ہر مائیگریٹ شدہ NUA صارف کے لیے ایک قطار، جس کا <code>meta_value</code> = ان کا اصلی دعوتی کوڈ۔</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>قبول شدہ جب:</strong> مائیگریشن کے بعد ہر صارف کا اصلی دعوتی کوڈ نکالا جا سکے — <code>zdam_code_logs</code> میں (Usage Logs / User Lookup) اور <code>zdam_migrated_invite_code</code> usermeta میں۔ جن کے پاس دعوتی کوڈ تھا، ان کے کوڈ کا خانہ کبھی خالی نہیں۔</div>
+	</section>
+
+	<!-- ============================ ضرورت ۲ ============================ -->
+	<section>
+		<h2><span class="num">۲</span> کوڈ امپورٹ اور ایکسپورٹ</h2>
+		<p class="lede">
+			دعوتی کوڈز اب پلگ ان میں <strong>امپورٹ</strong> کیے جا سکتے ہیں (پیسٹ کر کے یا فائل اپ لوڈ کر کے) — تاکہ سرور-انفراسٹرکچر
+			ڈیٹا بیس میں بنے کوڈز صارف اکاؤنٹس سے منسلک کیے جا سکیں۔ پرانا <strong>ایکسپورٹ</strong> (CSV/TXT) الٹی سمت کے لیے پہلے کی طرح موجود ہے۔
+		</p>
+
+		<div class="ask">
+			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
+			<blockquote>
+				<p>"دعوتی کوڈ اب صرف پلگ ان کے اندر بن سکتے ہیں، امپورٹ کا کوئی طریقہ نہیں۔ مجھے یا تو اپنے بنائے کوڈز امپورٹ کرنے ہیں (یہ ایک الگ ڈیٹا بیس سے ہوگا جو سرور انفرا چلاتا ہے)، یا بنے ہوئے کوڈز ایکسپورٹ کر کے اپنے سسٹم میں ڈالنے ہیں۔ کیونکہ مجھے انہیں صارف اکاؤنٹس سے منسلک کرنا ہے۔"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">اس اپ ڈیٹ میں کیسے حل کیا گیا</span>
+			<ul>
+				<li>TRADESAFE مینیو میں نیا <strong>"Import Codes" صفحہ</strong>: ہر لائن پر ایک کوڈ پیسٹ کریں، یا TXT / CSV / JSON فائل اپ لوڈ کریں۔ CSV فائل میں ہیڈر لائن ہو سکتی ہے (<code>code, code_type, group, batch_name, max_uses, expiration_date, status, notes</code>، …) اور ہر قطار کی قدریں فارم کی ڈیفالٹ پر فوقیت رکھتی ہیں۔</li>
+				<li>امپورٹ سے <strong>پہلے پیش نظارہ</strong>: صفحہ کل قطاریں، امپورٹ کے لیے تیار درست کوڈز، اور چھوڑے گئے (نقل / غلط) کوڈز — وجہ کے ساتھ — گنتا ہے۔ <em>Import Codes</em> دبانے تک کچھ بھی نہیں لکھا جاتا۔</li>
+				<li>امپورٹ شدہ کوڈز عام <strong>Codes</strong> فہرست میں بیچ کے نام کے ساتھ آتے ہیں، اور پلگ ان کے بنائے ہوئے کوڈز کی طرح کام کرتے ہیں (منسلک، ریڈیم، ایکسپورٹ قابل)۔</li>
+				<li><strong>Export</strong> (CSV / TXT) پہلے سے موجود تھا اور اسی طرح ہے — اب کوڈز دونوں سمتوں میں چلتے ہیں۔</li>
+			</ul>
+		</div>
+
+		<h3>حصہ ا — کوڈ امپورٹ</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path"><em>TRADESAFE → Import Codes</em> کھولیں</strong>
+				TRADESAFE مینیو کے نیچے نیا ذیلی صفحہ۔ نظر نہ آئے تو ایڈمن مینیو ریفریش کریں۔
+			</li>
+			<li>
+				<strong class="path">کوڈ پیسٹ کریں — ہر لائن پر ایک</strong>
+				"Paste codes" منتخب کریں اور چند ٹیسٹ کوڈز پیسٹ کریں، مثلاً:
+				<pre><code>TSG-7F3K9Q
+TSG-2M8X5B
+TSG-9W4R6T</code></pre>
+			</li>
+			<li>
+				<strong class="path">یا فائل اپ لوڈ کریں</strong>
+				"Upload a file" منتخب کریں اور <code>.txt</code> / <code>.csv</code> فائل چنیں۔ فائل کا مواد خود بخود ٹیکسٹ باکس میں آ جاتا ہے۔ CSV فائل میں ہیڈر لائن ہو سکتی ہے، مثلاً:
+				<pre><code>code,code_type,max_uses,expiration_date,notes
+TSG-7F3K9Q,access,1,2026-12-31,batch from infra DB
+TSG-2M8X5B,access,unlimited,never,</code></pre>
+				<div class="note">پہچانے جانے والے CSV کالم: <code>code, code_type, group, batch_name, default_account_role, roles_granted, max_uses, used_count, expiration_date, status, redirect_url, notes</code>۔ ہر قطار کی قدریں فارم کی ڈیفالٹ پر فوقیت رکھتی ہیں۔</div>
+			</li>
+			<li>
+				<strong class="path">فارم کی ڈیفالٹ سیٹ کریں</strong>
+				Code Type، Group، اور ایک Batch Name چنیں (جیسے <code>imported-june-batch</code>)۔ Max Uses اور Expiration Generate Codes کی طرح کام کرتے ہیں۔
+			</li>
+			<li>
+				<strong class="path"><em>Preview Import</em> دبائیں</strong>
+				<div class="expect"><strong>توقع:</strong> پیش نظارہ پینل میں <em>Total rows detected</em>، <em>Valid codes (ready to import)</em>، اور <em>Skipped</em> شمار۔ نقل، خالی لائنیں، اور غلط قدریں وجہ کے ساتھ درج اور خارج ہوں گی۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/03-import-preview.png" alt="لائیو staging میں Import Codes پیش نظارہ: ۳ لائنیں ملیں، ۳ درست، ۰ چھوٹیں" />
+				<figcaption><strong>لائیو staging — Import Codes → Preview</strong>. ہیڈر لائن والی پیسٹ کی گئی CSV کا تجزیہ ہوتا ہے: <strong>کل ملیں ۳</strong>، <strong>درست کوڈز (امپورٹ کے لیے تیار) ۳</strong>، <strong>چھوٹے گئے ۰</strong>۔ ہر قطار کی قدریں (یہاں <code>code_type=access</code>) CSV کالموں سے پڑھی جاتی ہیں۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>Import Codes</em> دبائیں</strong>
+				<div class="expect"><strong>توقع:</strong> کامیابی کا پیغام "<em>N code(s) imported successfully</em>"۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/04-import-success.png" alt="امپورٹ کامیابی کا بینر (لوکل ڈیمو)" />
+				<figcaption><strong>Import → کامیاب (لوکل ڈیمو).</strong> اصلی امپورٹ staging سرور پر <em>نہیں</em> چلایا جاتا، تاکہ کلائنٹ کا ڈیٹا محفوظ رہے۔ سبز بینر <em>N code(s) imported successfully</em> دکھاتا ہے۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path"><em>TRADESAFE → Codes</em> میں تصدیق کریں</strong>
+				بیچ کا نام یا کوئی امپورٹ شدہ کوڈ تلاش کریں۔
+				<div class="expect"><strong>توقع:</strong> امپورٹ شدہ کوڈ status <strong>Unused</strong>، درست کوڈ ٹائپ، گروپ، اور آپ کا دیا ہوا بیچ نام کے ساتھ نظر آئیں گے۔ اب یہ عام کوڈز کی طرح منسلک / ریڈیم ہو سکتے ہیں۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/07-codes-list.png" alt="لائیو staging میں Codes فہرست، موجودہ دعوتی کوڈز کے ساتھ" />
+				<figcaption><strong>لائیو staging — TRADESAFE → Codes</strong>. موجودہ فہرست (<em>کل ۱۲ میں سے ۱ سے ۱۲ دکھائے جا رہے ہیں</em>) اصلی رجسٹریشن دعوتی کوڈز دکھاتی ہے۔ ایک بار امپورٹ چلانے پر، امپورٹ شدہ بیچ یہاں status <strong>Unused</strong> کے ساتھ آئے گا، پلگ ان کے بنائے ہوئے کوڈز کی طرح منسلک ہو سکے گا۔</figcaption>
+			</figure>
+		</ol>
+
+		<h3>حصہ ب — کوڈ ایکسپورٹ (پہلے سے موجود فیچر)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path"><em>TRADESAFE → Codes</em> کھولیں</strong>
+				فلٹر (status, type, batch) لگائیں یا قطاریں منتخب کریں۔
+			</li>
+			<li>
+				<strong class="path"><em>Export CSV</em> یا <em>Export TXT</em> دبائیں</strong>
+				<div class="expect"><strong>توقع:</strong> موجودہ فلٹر شدہ کوڈز کے ساتھ فائل ڈاؤن لوڈ ہوگی (type, group, batch, max_uses, status سمیت)۔ یہی فائل آپ اپنے سرور-انفراسٹرکچر ڈیٹا بیس میں امپورٹ کر سکتے ہیں۔</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>قبول شدہ جب:</strong> باہر بنے کوڈز امپورٹ ہو سکیں (پیسٹ یا فائل، پیش نظارہ کے ساتھ) اور پلگ ان کے بنے کوڈز ایکسپورٹ ہو سکیں (CSV/TXT) — کوڈ دونوں سمتوں میں چلتے ہیں۔</div>
+	</section>
+
+	<!-- ============================ ضرورت ۳ ============================ -->
+	<section>
+		<h2><span class="num">۳</span> FSLM انکرپشن کلید — مائیگریشن کا دن (سرور)</h2>
+		<p class="lede">
+			یہ <strong>سرور کی طرف</strong> کا کام ہے، پلگ ان کی خصوصیت نہیں۔ لائسنس مینیجر کی انکرپشن کلید ایک <strong>فائل</strong> میں ہوتی ہے،
+			ڈیٹا بیس میں نہیں۔ نئے سرور پر ڈیٹا بیس کے ساتھ اسے بھی کاپی کرنا ضروری ہے؛ ورنہ پہلے فروخت ہونے والا ہر پروڈکٹ کلید ناقابلِ پڑھنے بن جائے گا۔
+		</p>
+
+		<div class="ask">
+			<span class="title">کلائنٹ نے کیا مانگا تھا</span>
+			<blockquote>
+				<p>"مائیگریشن کے دن کے لیے (سرور، پلگ ان نہیں): <code>wp-content/uploads/fslm_files/encryption_key.php</code> کو ڈیٹا بیس کے ساتھ نئے سرور پر کاپی کرنا ضروری ہے۔ لائسنس مینیجر کی انکرپشن کلید اس فائل میں ہوتی ہے، ڈیٹا بیس میں نہیں — یہ نہ ہونے پر ہر فروخت شدہ کلید ناقابلِ پڑھنے بن جاتی ہے۔"</p>
+			</blockquote>
+		</div>
+
+		<div class="fixed">
+			<span class="title">اس اپ ڈیٹ میں کیسے نمٹا گیا</span>
+			<ul>
+				<li>یہ <strong>پلگ ان خود کاپی نہیں کر سکتا</strong> — کلید کی فائل پلگ ان سے باہر ہے۔ اس لیے حل دستاویزات + ایک حفاظتی انتباہ ہے۔</li>
+				<li><strong>مائیگریشن ڈے رن بک</strong>: <code>docs/MIGRATION.md</code> اور نیچے دیے گئے مراحل پرانے سرور → نئے سرور کے لیے صحیح کاپی اور <code>sha256</code> تصدیق کے احکامات دیتے ہیں۔</li>
+				<li><strong>ڈیش بورڈ حفاظتی جال</strong>: سرور پر FSLM نصب ہو لیکن کلید کی فائل نہ ہو، تو TRADESAFE ڈیش بورڈ سرخ <em>"FSLM encryption key missing"</em> نوٹس دکھاتا ہے — صحیح متوقع راستے کے ساتھ — تاکہ گاہکوں پر اثر پڑنے سے پہلے مسئلہ نظر آئے۔</li>
+			</ul>
+		</div>
+
+		<div class="alert">
+			<strong>اہم فائل:</strong>
+			<code>wp-content/uploads/fslm_files/encryption_key.php</code>
+			— نئے سرور پر یہ نہ ہونے پر پہلے فروخت شدہ کلیدز ڈکرپٹ نہیں ہو سکتیں۔
+		</div>
+
+		<h3>مائیگریشن سے پہلے (پرانا سرور)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">تصدیق کریں کہ کلید کی فائل موجود ہے</strong>
+				<pre><code>ls -la wp-content/uploads/fslm_files/encryption_key.php
+sha256sum wp-content/uploads/fslm_files/encryption_key.php   <span class="c"># یہ ہیش نوٹ کر لیں</span></code></pre>
+				<div class="expect"><strong>توقع:</strong> فائل موجود اور پڑھنے کے قابل ہو۔ <code>sha256</code> ہیش نوٹ کر لیں — نئے سرور پر موازنہ کریں گے۔</div>
+			</li>
+			<li>
+				<strong class="path">سب کا بیک اپ لیں</strong>
+				پوری فائل کاپی + پورا ڈیٹا بیس ڈمپ۔ کلید کی فائل <code>wp-content/uploads/fslm_files/</code> کی کاپی کے اندر ہونی چاہیے۔
+			</li>
+		</ol>
+
+		<h3>مائیگریشن (نیا سرور)</h3>
+		<ol class="steps">
+			<li>
+				<strong class="path">ڈیٹا بیس کاپی کریں</strong>
+				ڈمپ کو نئے سرور کے ڈیٹا بیس میں امپورٹ کریں۔
+			</li>
+			<li>
+				<strong class="path"><code>wp-content/uploads/fslm_files/</code> (کلید کی فائل سمیت) کاپی کریں</strong>
+				تصدیق کریں کہ کلید آ گئی ہے:
+				<pre><code>sha256sum wp-content/uploads/fslm_files/encryption_key.php</code></pre>
+				<div class="expect"><strong>توقع:</strong> ہیش پرانے سرور پر نوٹ کیے گئے ہیش سے ملے۔</div>
+			</li>
+			<li>
+				<strong class="path">ڈیش بورڈ نوٹس چیک کریں</strong>
+				نئے سرور پر لاگ ان ہو کر <em>TRADESAFE → Access Manager</em> کھولیں۔
+				<div class="expect"><strong>توقع:</strong> FSLM موجود اور کلید کی فائل نہ ہونے پر، سرخ "FSLM encryption key missing" نوٹس صحیح متوقع راستے کے ساتھ نظر آئے۔ کلید کی فائل موجود ہونے پر <strong>کوئی</strong> نوٹس نہیں۔</div>
+			</li>
+			<figure class="shot">
+				<img src="screenshots/01-dashboard.png" alt="لائیو staging میں TRADESAFE Access Manager ڈیش بورڈ" />
+				<figcaption><strong>لائیو staging — TRADESAFE → Access Manager</strong> — ڈیش بورڈ جیسا staging سرور پر نظر آتا ہے۔ staging پر FSLM نہیں ہے، اس لیے کسی انتباہ کی توقع نہیں؛ نئے پروڈکشن سرور پر FSLM موجود مگر <code>encryption_key.php</code> غائب ہو تو، ان اعداد و شمار کے اوپر صحیح متوقع راستے کے ساتھ سرخ نوٹس آئے گا۔</figcaption>
+			</figure>
+			<li>
+				<strong class="path">کسی پرانے پروڈکٹ کلید سے سموک ٹیسٹ کریں</strong>
+				لائسنس/پروڈکٹ کلید کی تفصیل کا صفحہ کھولیں اور تصدیق کریں کہ محفوظ شدہ (انکرپٹڈ) ٹوکن اب بھی ڈکرپٹ ہوتا ہے۔
+				<div class="expect"><strong>توقع:</strong> پہلے فروخت شدہ کلیدز پڑھنے کے قابل رہیں۔</div>
+			</li>
+		</ol>
+
+		<div class="ok"><strong>قبول شدہ جب:</strong> <code>wp-content/uploads/fslm_files/encryption_key.php</code> ڈیٹا بیس کے ساتھ نئے سرور پر کاپی ہو، اس کا <code>sha256</code> ملے، ڈیش بورڈ پر کلید نہ ہونے کا انتباہ نہ ہو، اور پرانی پروڈکٹ کلید اب بھی ڈکرپٹ ہو۔</div>
+	</section>
+
+	<!-- ============================ چیک لسٹ ============================ -->
+	<section>
+		<h2><span class="num">✓</span> حتمی منظوری کی چیک لسٹ</h2>
+		<ul class="check">
+			<li>Migrate Accounts کا پیش نظارہ ملنے والے بمقابلہ نہ ملنے والے دعوتی کوڈز کی اطلاع دیتا ہے۔</li>
+			<li>مائیگریشن کے بعد <em>Usage Logs</em> رجسٹریشن/کامیاب قطاریں صارف کے دعوتی کوڈ کے ساتھ دکھاتا ہے۔</li>
+			<li>مائیگریشن کے بعد <em>User Lookup</em> صارف کا دعوتی کوڈ دکھاتا ہے۔</li>
+			<li><code>zdam_migrated_invite_code</code> usermeta میں ہر مائیگریٹ شدہ صارف کا اصلی کوڈ ہوتا ہے۔</li>
+			<li>Import Codes: پیسٹ اور فائل اپ لوڈ دونوں کام کرتے ہیں؛ پیش نظارہ کے شمار ملتے ہیں؛ کوڈز Codes فہرست میں آتے ہیں۔</li>
+			<li>Export Codes: CSV/TXT ایکسپورٹ اب بھی قابلِ استعمال فائل بناتا ہے۔</li>
+			<li>مائیگریشن کا دن: <code>encryption_key.php</code> ڈیٹا بیس کے ساتھ کاپی ہوا؛ نئے سرور پر <code>sha256</code> ملا۔</li>
+			<li>ڈیش بورڈ "FSLM encryption key missing" نوٹس صرف اس وقت دکھائے جب کلید واقعی غائب ہو۔</li>
+		</ul>
+	</section>
+
+	<footer>
+		TradeSafe Access Manager — تصدیقی گائیڈ · مکمل سرور رن بک کے لیے <code>docs/MIGRATION.md</code> دیکھیں۔
+	</footer>
+
+	</div><!-- /content-ur -->
+
+</div>
+</body>
+<script>
+(function () {
+	var langs = {
+		en: { id: 'content-en', btn: 'btn-en' },
+		bn: { id: 'content-bn', btn: 'btn-bn' },
+		ur: { id: 'content-ur', btn: 'btn-ur' }
+	};
+	function show(lang) {
+		Object.keys(langs).forEach(function (key) {
+			var el = document.getElementById(langs[key].id);
+			var btn = document.getElementById(langs[key].btn);
+			var active = (key === lang);
+			if (active) { el.classList.remove('hidden'); btn.classList.add('active'); }
+			else { el.classList.add('hidden'); btn.classList.remove('active'); }
+		});
+	}
+	Object.keys(langs).forEach(function (key) {
+		document.getElementById(langs[key].btn).addEventListener('click', function () { show(key); });
+	});
+})();
+</script>
+</html>
